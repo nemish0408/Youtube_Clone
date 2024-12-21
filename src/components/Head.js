@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
-import { SEARCH_API_URL, SEARCH_API_URL_EXT } from "../utils/constants";
+import { SEARCH_API_URL_EXT } from "../utils/constants";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -13,10 +13,11 @@ const Head = () => {
   const getVideos = async (searchText) => {
     try {
       const response = await fetch(
-        `${SEARCH_API_URL}${searchText}${SEARCH_API_URL_EXT}`
+        `${SEARCH_API_URL_EXT}${searchText}`
       );
       const data = await response.json();
-      setSearchSugg(data);
+      setSearchSugg(data[1]);
+
     } catch (error) {
       console.error("Error fetching suggestions:", error);
     }
@@ -42,9 +43,6 @@ const Head = () => {
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
-  useEffect(() => {
-    console.log(searchSugg.items);
-  }, [searchSugg]);
 
   useEffect(() => {
     return () => {
@@ -77,11 +75,10 @@ const Head = () => {
           <div className="flex items-center w-full max-w-sm relative">
             <div className="relative w-full h-full">
               <span
-                className={`absolute inset-y-0 left-3 flex items-center transition-opacity duration-300 ${
-                  isFocused || searchSugg.items?.length > 0
+                className={`absolute inset-y-0 left-3 flex items-center transition-opacity duration-300 ${isFocused || searchSugg?.length > 0
                     ? "opacity-100"
                     : "opacity-0"
-                }`}
+                  }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -108,15 +105,15 @@ const Head = () => {
                 onChange={handleInputChange}
               />
             </div>
-            {searchSugg.items?.length > 0 && isFocused && (
+            {searchSugg?.length > 0 && isFocused && (
               <div className="absolute top-16 bg-white w-full rounded-lg shadow-lg left-0">
                 <ul>
-                  {searchSugg.items.map((item) => (
+                  {searchSugg.map((item, index) => (
                     <li
-                      key={item.id.videoId}
+                      key={index}
                       className="ps-10 pe-5 rounded-lg hover:bg-gray-300 py-2 text-ellipsis overflow-hidden whitespace-nowrap"
                     >
-                      {item.snippet.title}
+                      {item}
                     </li>
                   ))}
                 </ul>
