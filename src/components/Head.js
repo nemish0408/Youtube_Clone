@@ -1,38 +1,86 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
+import { SEARCH_API_URL, SEARCH_API_URL_EXT } from "../utils/constants";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
+  const [searchSugg, setSearchSugg] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const debounceTimer = useRef(null);
   const dispatch = useDispatch();
+
+  const getVideos = async (searchText) => {
+    try {
+      const response = await fetch(
+        `${SEARCH_API_URL}${searchText}${SEARCH_API_URL_EXT}`
+      );
+      const data = await response.json();
+      setSearchSugg(data);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const text = e.target.value;
+    setSearchText(text);
+
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      if (text.trim()) {
+        getVideos(text);
+      } else {
+        setSearchSugg([]);
+      }
+    }, 300);
+  };
+
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
+  useEffect(() => {
+    console.log(searchSugg.items);
+  }, [searchSugg]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="py-[20px] mb-[30px] bg-white shadow-slate-400 shadow-lg sticky top-0 z-[1]">
-      <div className="flex px-[30px] justify-between ">
-        <div className="flex align-middle ">
-          <button onClick={() => toggleMenuHandler()}>
+    <div className="py-[15px] bg-white shadow-slate-400 shadow-lg sticky top-0 z-[1]">
+      <div className="flex px-2.5 md:px-[30px] justify-between">
+        <div className="flex align-middle">
+          <button onClick={toggleMenuHandler}>
             <img
               src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"
-              alt="img"
+              alt="Menu"
               className="w-[25px]"
             />
           </button>
-          <button className="ms-5">
+          <button className="ms-5 hidden md:block">
             <img
               src="https://cdnlogo.com/logos/y/73/youtube.svg"
-              alt="img"
+              alt="YouTube"
               className="w-[150px]"
             />
           </button>
         </div>
-        <div className="flex justify-center w-full px-10">
-          <div className="flex items-center w-full max-w-sm">
-            <div className="relative w-full">
+        <div className="flex justify-center w-full">
+          <div className="flex items-center w-full max-w-sm relative">
+            <div className="relative w-full h-full">
               <span
                 className={`absolute inset-y-0 left-3 flex items-center transition-opacity duration-300 ${
-                  isFocused ? "opacity-100" : "opacity-0"
+                  isFocused || searchSugg.items?.length > 0
+                    ? "opacity-100"
+                    : "opacity-0"
                 }`}
               >
                 <svg
@@ -52,19 +100,35 @@ const Head = () => {
               </span>
               <input
                 type="text"
-                className="w-full border border-gray-500 rounded-l-full pl-10 pr-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                className="w-full border text-sm md:text-lg py-3 border-gray-500 rounded-l-full pl-10 pr-4  text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500"
                 placeholder="Search"
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                value={searchText}
+                onChange={handleInputChange}
               />
             </div>
+            {searchSugg.items?.length > 0 && isFocused && (
+              <div className="absolute top-16 bg-white w-full rounded-lg shadow-lg left-0">
+                <ul>
+                  {searchSugg.items.map((item) => (
+                    <li
+                      key={item.id.videoId}
+                      className="ps-10 pe-5 rounded-lg hover:bg-gray-300 py-2 text-ellipsis overflow-hidden whitespace-nowrap"
+                    >
+                      {item.snippet.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-          <button className="border border-gray-500 rounded-r-full border-l-0 px-3 py-2 hover:bg-gray-500 hover:text-white">
+          <button className="border text-sm md:text-lg border-gray-500 rounded-r-full border-l-0 px-3 hover:bg-gray-500 hover:text-white">
             Search
           </button>
         </div>
         <div className="flex align-middle gap-2">
-          <button className="flex justify-center align-middle gap-1.5 bg-gray-500 text-white hover:bg-gray-600 px-4 rounded-full  min-w-[110px]">
+          <button className="flex justify-center align-middle gap-1.5 bg-gray-500 text-white hover:bg-gray-600 px-2.5 md:px-4 rounded-full  md:min-w-[110px]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               enableBackground="new 0 0 24 24"
@@ -83,9 +147,11 @@ const Head = () => {
             >
               <path d="M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8v1z"></path>
             </svg>
-            <span className="h-full flex pt-2 align-middle">Create</span>
+            <span className="h-full flex pt-2.5 md:pt-3.5 align-middle">
+              Create
+            </span>
           </button>
-          <div className="p-2 rounded-full bg-gray-500 hover:bg-gray-600">
+          <div className="md:p-3.5 p-2.5 rounded-full bg-gray-500 hover:bg-gray-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="white"
@@ -108,7 +174,7 @@ const Head = () => {
               ></path>
             </svg>
           </div>
-          <div className="p-2 rounded-full bg-gray-500 hover:bg-gray-600">
+          <div className="md:p-3.5 p-2.5 rounded-full bg-gray-500 hover:bg-gray-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="white"

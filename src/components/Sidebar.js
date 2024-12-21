@@ -8,7 +8,7 @@ const Sidebar = () => {
     return null;
   } else {
     return (
-      <div className="w-[12vw] h-[calc(100%-65px)] bg-white overflow-y-auto">
+      <div className="md:w-[12vw] absolute md:relative pe-8 md:pe-0 h-full bg-white overflow-y-auto scrollbar-hidden">
         <div>
           <h1 className="font-semibold ps-8 py-2">Home</h1>
           <h1 className="font-semibold ps-8 py-2">Shorts</h1>

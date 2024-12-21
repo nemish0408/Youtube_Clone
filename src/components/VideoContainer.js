@@ -13,14 +13,16 @@ const VideoContainer = () => {
     const data = await fetch(YOUTUBE_VIDEO_URL);
     const json = await data.json();
     await setVideos(json.items);
+    // console.log(json);
+    
   };
 
   return (
-    <div className="grid grid-cols-4 gap-5 p-5">
+    <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5 ">
       {videos[0]&&<AdVideocard info={videos[0]}></AdVideocard>}
       {videos.map((item, index) => {
         return (
-          <div className="shadow-md rounded-lg" key={index}>
+          <div className="shadow-md rounded-lg w-full" key={index}>
             <VideoCard info={item} />
           </div>
         );

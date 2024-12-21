@@ -3,7 +3,7 @@ import React from 'react'
 const ButtonList = () => {
   return (
     <>
-    <div className='overflow-x-auto '>
+    <div className='overflow-x-auto scrollbar-hidden'>
       <ul className='flex gap-2 '>
         <li className='text-white bg-gray-500 hover:bg-gray-600 inline-block whitespace-nowrap px-3 py-1.5 rounded-xl'>All</li>
         <li className='text-white bg-gray-500 hover:bg-gray-600 inline-block whitespace-nowrap px-3 py-1.5 rounded-xl'>Music</li>
