@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { YOUTUBE_VIDEO_URL } from "../utils/constants";
-import VideoCard from "./VideoCard";
+import VideoCard, { AdVideocard } from "./VideoCard";
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
@@ -17,6 +17,7 @@ const VideoContainer = () => {
 
   return (
     <div className="grid grid-cols-4 gap-5 p-5">
+      {videos[0]&&<AdVideocard info={videos[0]}></AdVideocard>}
       {videos.map((item, index) => {
         return (
           <div className="shadow-md rounded-lg" key={index}>
