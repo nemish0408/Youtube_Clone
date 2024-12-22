@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
-import { SEARCH_API_URL_EXT } from "../utils/constants";
+import { SEARCH_API_URL } from "../utils/constants";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -13,7 +13,7 @@ const Head = () => {
   const getVideos = async (searchText) => {
     try {
       const response = await fetch(
-        `${SEARCH_API_URL_EXT}${searchText}`
+        `${SEARCH_API_URL}${searchText}`
       );
       const data = await response.json();
       setSearchSugg(data[1]);
