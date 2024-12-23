@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 const getTimeAgo = (publishedAt) => {
   const publishedDate = new Date(publishedAt);
@@ -31,19 +32,19 @@ const getTimeAgo = (publishedAt) => {
 };
 
 const VideoCard = ({ info }) => {
-  const { snippet, statistics, id } = info;
+  const { snippet, statistics, id, contentDetails } = info;
   return (
-    <a
-      href={"https://www.youtube.com/watch?v=" + id}
-      target="_blank"
+    <Link
+      to={"/videoplayer/"+id}
       rel="noreferrer"
     >
-      <div className="w-full">
+      <div className="w-full relative overflow-hidden">
+        <p className="absolute text-white bg-black text-xs px-0.5 rounded-md right-[7px] top-[153px]">{contentDetails.duration.slice(2)}</p>
         <img
           alt="thumbnail"
           src={snippet.thumbnails.medium.url}
-          className="w-full rounded-lg"
-        />
+          className="w-full rounded-lg hover:rounded-none hover:scale-[1.01]"
+        ></img>
         <p className="font-bold px-2 text-ellipsis overflow-hidden whitespace-nowrap mt-2">
           {snippet.title}
         </p>
@@ -55,7 +56,7 @@ const VideoCard = ({ info }) => {
           {getTimeAgo(snippet.publishedAt)}
         </p>
       </div>
-    </a>
+    </Link>
   );
 };
 

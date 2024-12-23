@@ -2,22 +2,21 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { SEARCH_API_URL } from "../utils/constants";
+import { Link } from "react-router";
+import { setFilter } from "../utils/searchResultSlice";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchSugg, setSearchSugg] = useState([]);
-  const [searchText, setSearchText] = useState("");
+  const [searchKey, setSearchKey] = useState(""); // Use searchKey to store the input value
   const debounceTimer = useRef(null);
   const dispatch = useDispatch();
 
   const getVideos = async (searchText) => {
     try {
-      const response = await fetch(
-        `${SEARCH_API_URL}${searchText}`
-      );
+      const response = await fetch(`${SEARCH_API_URL}${searchText}`);
       const data = await response.json();
-      setSearchSugg(data[1]);
-
+      setSearchSugg(data[1] || []); // Ensure empty array if no suggestions
     } catch (error) {
       console.error("Error fetching suggestions:", error);
     }
@@ -25,7 +24,8 @@ const Head = () => {
 
   const handleInputChange = (e) => {
     const text = e.target.value;
-    setSearchText(text);
+    setSearchKey(text); // Update searchKey directly
+    dispatch(setFilter(searchKey));
 
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -38,6 +38,10 @@ const Head = () => {
         setSearchSugg([]);
       }
     }, 300);
+  };
+
+  const handleSearch = () => {
+    dispatch(setFilter(searchKey)); // Dispatch filter with searchKey
   };
 
   const toggleMenuHandler = () => {
@@ -64,21 +68,24 @@ const Head = () => {
             />
           </button>
           <button className="ms-5 hidden md:block">
-            <img
-              src="https://cdnlogo.com/logos/y/73/youtube.svg"
-              alt="YouTube"
-              className="w-[150px]"
-            />
+            <Link to="/">
+              <img
+                src="https://cdnlogo.com/logos/y/73/youtube.svg"
+                alt="YouTube"
+                className="w-[150px]"
+              />
+            </Link>
           </button>
         </div>
         <div className="flex justify-center w-full">
           <div className="flex items-center w-full max-w-sm relative">
             <div className="relative w-full h-full">
               <span
-                className={`absolute inset-y-0 left-3 flex items-center transition-opacity duration-300 ${isFocused || searchSugg?.length > 0
+                className={`absolute inset-y-0 left-3 flex items-center transition-opacity duration-300 ${
+                  isFocused || searchSugg?.length > 0
                     ? "opacity-100"
                     : "opacity-0"
-                  }`}
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -97,11 +104,11 @@ const Head = () => {
               </span>
               <input
                 type="text"
-                className="w-full border text-sm md:text-lg py-3 border-gray-500 rounded-l-full pl-10 pr-4  text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                className="w-full border text-sm md:text-lg py-3 border-gray-500 rounded-l-full pl-10 pr-4 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500"
                 placeholder="Search"
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                value={searchText}
+                value={searchKey} // Use searchKey for the input value
                 onChange={handleInputChange}
               />
             </div>
@@ -111,6 +118,8 @@ const Head = () => {
                   {searchSugg.map((item, index) => (
                     <li
                       key={index}
+                      onMouseDown={(e) => e.preventDefault()} // Prevent blur
+                      onClick={() => setSearchKey(item)} // Update searchKey when suggestion clicked
                       className="ps-10 pe-5 rounded-lg hover:bg-gray-300 py-2 text-ellipsis overflow-hidden whitespace-nowrap"
                     >
                       {item}
@@ -120,7 +129,10 @@ const Head = () => {
               </div>
             )}
           </div>
-          <button className="border text-sm md:text-lg border-gray-500 rounded-r-full border-l-0 px-3 hover:bg-gray-500 hover:text-white">
+          <button
+            className="border text-sm md:text-lg border-gray-500 rounded-r-full border-l-0 px-3 hover:bg-gray-500 hover:text-white"
+            onClick={handleSearch}
+          >
             Search
           </button>
         </div>
