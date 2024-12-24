@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import { YOUTUBE_VIDEO_URL } from "../utils/constants";
 import VideoCard, { AdVideocard } from "./VideoCard";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMenu } from "../utils/appSlice";
 import { setResults } from "../utils/searchResultSlice";
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
   const dispatch = useDispatch();
-
-  // Fetch the filtered results directly from Redux
   const filtered = useSelector((store) => store.searchResult.FilteredResults);
   // console.log(filtered);
 
@@ -29,6 +26,8 @@ const VideoContainer = () => {
       const data = await fetch(YOUTUBE_VIDEO_URL);
       const json = await data.json();
       setVideos(json.items || []); // Set to empty array if no items
+      // console.log(json);
+      
     } catch (error) {
       console.error("Error fetching videos:", error);
     }

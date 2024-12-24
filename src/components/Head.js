@@ -2,13 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { SEARCH_API_URL } from "../utils/constants";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { setFilter } from "../utils/searchResultSlice";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchSugg, setSearchSugg] = useState([]);
-  const [searchKey, setSearchKey] = useState(""); // Use searchKey to store the input value
+  const [searchKey, setSearchKey] = useState("");
   const debounceTimer = useRef(null);
   const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const Head = () => {
     try {
       const response = await fetch(`${SEARCH_API_URL}${searchText}`);
       const data = await response.json();
-      setSearchSugg(data[1] || []); // Ensure empty array if no suggestions
+      setSearchSugg(data[1] || []);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
     }
@@ -24,8 +24,7 @@ const Head = () => {
 
   const handleInputChange = (e) => {
     const text = e.target.value;
-    setSearchKey(text); // Update searchKey directly
-    dispatch(setFilter(searchKey));
+    setSearchKey(text);
 
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -41,7 +40,7 @@ const Head = () => {
   };
 
   const handleSearch = () => {
-    dispatch(setFilter(searchKey)); // Dispatch filter with searchKey
+    dispatch(setFilter(searchKey));
   };
 
   const toggleMenuHandler = () => {
@@ -57,37 +56,43 @@ const Head = () => {
   }, []);
 
   return (
-    <div className="py-[15px] bg-white shadow-slate-400 shadow-lg sticky top-0 z-[1]">
-      <div className="flex px-2.5 md:px-[30px] justify-between">
-        <div className="flex align-middle">
-          <button onClick={toggleMenuHandler}>
-            <img
-              src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"
-              alt="Menu"
-              className="w-[25px]"
-            />
-          </button>
-          <button className="ms-5 hidden md:block">
-            <Link to="/">
+    <div className="sticky top-0 z-10 bg-white shadow-md">
+      <div className="flex justify-between items-center px-4 md:px-6 py-2">
+        {/* Left Section */}
+        <div className="flex items-center">
+          <button onClick={toggleMenuHandler} className="p-2">
               <img
-                src="https://cdnlogo.com/logos/y/73/youtube.svg"
-                alt="YouTube"
-                className="w-[150px]"
+                src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"
+                alt="Menu"
+                className="w-6 md:w-8"
               />
-            </Link>
           </button>
+          <Link to="/" className="ml-4 hidden md:block">
+            <img
+              src="https://cdnlogo.com/logos/y/73/youtube.svg"
+              alt="YouTube Logo"
+              className="w-24"
+            />
+          </Link>
         </div>
-        <div className="flex justify-center w-full">
-          <div className="flex items-center w-full max-w-sm relative">
-            <div className="relative w-full h-full">
-              <span
-                className={`absolute inset-y-0 left-3 flex items-center transition-opacity duration-300 ${
-                  isFocused || searchSugg?.length > 0
-                    ? "opacity-100"
-                    : "opacity-0"
-                }`}
-              >
-                <svg
+
+        {/* Search Section */}
+        <div className="flex flex-grow justify-center items-center relative">
+          <div className="flex items-center w-full max-w-3xl relative">
+            <input
+              type="text"
+              className="flex-grow border border-gray-300 rounded-l-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              placeholder="Search"
+              value={searchKey}
+              onChange={handleInputChange}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            <button
+              className="border border-gray-300 rounded-r-full bg-gray-100 px-4 py-2 hover:bg-gray-200"
+              onClick={handleSearch}
+            >
+              <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5"
                   fill="none"
@@ -101,50 +106,39 @@ const Head = () => {
                     d="M8 16a6 6 0 100-12 6 6 0 000 12zm8 0l4 4"
                   />
                 </svg>
-              </span>
-              <input
-                type="text"
-                className="w-full border text-sm md:text-lg py-3 border-gray-500 rounded-l-full pl-10 pr-4 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                placeholder="Search"
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                value={searchKey} // Use searchKey for the input value
-                onChange={handleInputChange}
-              />
+            </button>
+            {searchSugg.length > 0 && isFocused && (
+            <div className="absolute top-full mt-2 bg-white shadow-lg w-full max-w-3xl rounded-lg z-10">
+              <ul className="py-2">
+                {searchSugg.map((item, index) => (
+                  <li
+                    key={index}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => setSearchKey(item)}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
-            {searchSugg?.length > 0 && isFocused && (
-              <div className="absolute top-16 bg-white w-full rounded-lg shadow-lg left-0">
-                <ul>
-                  {searchSugg.map((item, index) => (
-                    <li
-                      key={index}
-                      onMouseDown={(e) => e.preventDefault()} // Prevent blur
-                      onClick={() => setSearchKey(item)} // Update searchKey when suggestion clicked
-                      className="ps-10 pe-5 rounded-lg hover:bg-gray-300 py-2 text-ellipsis overflow-hidden whitespace-nowrap"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          )}
           </div>
-          <button
-            className="border text-sm md:text-lg border-gray-500 rounded-r-full border-l-0 px-3 hover:bg-gray-500 hover:text-white"
-            onClick={handleSearch}
-          >
-            Search
-          </button>
+
+          {/* Search Suggestions */}
+          
         </div>
-        <div className="flex align-middle gap-2">
-          <button className="flex justify-center align-middle gap-1.5 bg-gray-500 text-white hover:bg-gray-600 px-2.5 md:px-4 rounded-full  md:min-w-[110px]">
-            <svg
+
+        {/* Right Section */}
+        <div className="flex items-center gap-4">
+          <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full flex">
+          <svg
               xmlns="http://www.w3.org/2000/svg"
               enableBackground="new 0 0 24 24"
               height="30"
               viewBox="0 0 24 24"
               width="30"
-              fill="white"
+              fill="black"
               focusable="false"
               aria-hidden="true"
               style={{
@@ -156,25 +150,17 @@ const Head = () => {
             >
               <path d="M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8v1z"></path>
             </svg>
-            <span className="h-full flex pt-2.5 md:pt-3.5 align-middle">
+            <span className="h-full text-sm flex pt-2.5 md:pt-1 align-middle">
               Create
             </span>
           </button>
-          <div className="md:p-3.5 p-2.5 rounded-full bg-gray-500 hover:bg-gray-600">
+          <button className="p-2 hover:bg-gray-200 bg-gray-100 rounded-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="white"
-              height="24"
+              className="h-6 w-6 text-black"
+              fill="black"
               viewBox="0 0 24 24"
-              width="24"
-              focusable="false"
-              aria-hidden="true"
-              style={{
-                pointerEvents: "none",
-                display: "inherit",
-                height: "100%",
-              }}
-              className="w-[24px]"
+              stroke="black"
             >
               <path
                 clipRule="evenodd"
@@ -182,22 +168,14 @@ const Head = () => {
                 fillRule="evenodd"
               ></path>
             </svg>
-          </div>
-          <div className="md:p-3.5 p-2.5 rounded-full bg-gray-500 hover:bg-gray-600">
+          </button>
+          <button className="p-2 hover:bg-gray-200 bg-gray-100 rounded-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="white"
-              height="24"
-              viewBox="0 0 16 16"
-              width="24"
-              focusable="false"
-              aria-hidden="true"
-              style={{
-                pointerEvents: "none",
-                display: "inherit",
-                height: "100%",
-              }}
-              className="w-[24px]"
+              className="h-6 w-6 text-black-600"
+              fill="black"
+              viewBox="0 0 18 18"
+              stroke="currentColor"
             >
               <path
                 xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +188,7 @@ const Head = () => {
                 fill=""
               />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
     </div>
