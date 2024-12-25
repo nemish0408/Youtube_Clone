@@ -48,7 +48,7 @@ const ButtonList = () => {
   }, []);
 
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center max-w-full">
       {/* Scroll Buttons */}
       {canScrollLeft && (
         <button

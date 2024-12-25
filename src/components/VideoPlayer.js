@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT } from "../utils/constants";
+import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT, VIDEO_DETAILS_URL, VIDEO_DETAILS_URL_EXT } from "../utils/constants";
 import Comments from "./Comments";
 import { useSelector } from "react-redux";
 import VideoDescription from "./VideoDescription";
@@ -10,32 +10,32 @@ import SidePopular from "./SidePopular";
 const VideoPlayer = () => {
   const { id } = useParams();
   const [channelLogourl, setChannelLogourl] = useState("");
-  const [details, setDetails] = useState(null); // Default to null for clarity
+  const [details, setDetails] = useState([]); // Default to null for clarity
   const [subscriberCount, setSubscriberCount] = useState(""); // For formatted sub count
 
   // Extracting video details from Redux store
-  const videoDetails = useSelector((store) =>
-    store.searchResult.FilteredResults.find((item) => item?.id === id)
-  );
+
 
   useEffect(() => {
-    let fetchedDetails = videoDetails;
+    const fetchDetails = async () => {
+      try {
+        const response = await fetch(
+          `${VIDEO_DETAILS_URL}${id}${VIDEO_DETAILS_URL_EXT}`
+        );
+        const json = await response.json();
+        if (json?.items?.length > 0) {
+          setDetails(json.items[0]);
+          if (json.items[0]?.snippet?.channelId) {
+            fetchChannelLogo(json.items[0]?.snippet?.channelId);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching video details:", error);
+      }
+    };
 
-    // If not found in Redux, retrieve from localStorage
-    if (!fetchedDetails) {
-      const localStorageData = JSON.parse(
-        localStorage.getItem("FilteredResults") || "[]"
-      );
-      fetchedDetails = localStorageData.find((item) => item?.id === id);
-    }
-
-    setDetails(fetchedDetails);
-
-    if (fetchedDetails?.snippet?.channelId) {
-      fetchChannelLogo(fetchedDetails.snippet.channelId);
-    }
-  }, [videoDetails, id]);
-// console.log(details?.statistics?.commentCount);
+    fetchDetails();
+  }, [id]);
 
   const fetchChannelLogo = async (channelId) => {
     try {
@@ -43,7 +43,6 @@ const VideoPlayer = () => {
         `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
       );
       const json = await response.json();
-
       const subCount = json.items[0]?.statistics?.subscriberCount || 0;
       setSubscriberCount(FormatNumber(subCount));
 
@@ -57,12 +56,13 @@ const VideoPlayer = () => {
   if (!details) {
     return <div>Loading...</div>; // Fallback UI while data is loading
   }
+console.log(details);
 
   return (
-    <div className="grid grid-flow-col w-[98vw]">
-      <div className="w-[60vw] px-10">
+    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 p-4 max-w-full">
+      <div className="md:lg:col-span-2 w-full">
         {/* Video Player */}
-        <div>
+        <div className="relative w-full aspect-w-16 aspect-h-9">
           <iframe
             src={`https://www.youtube.com/embed/${id}?autoplay=1`}
             title={details.snippet?.title || "YouTube Video"}
@@ -174,9 +174,11 @@ const VideoPlayer = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className="inline self-center font-semibold">Like </span>
+                  <span className="inline self-center font-semibold">
+                    Like{" "}
+                  </span>
                 </button>
-               
+
                 <button className=" flex text-black rounded-r-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -291,7 +293,12 @@ const VideoPlayer = () => {
             </div>
           </div>
           <div className="mt-4">
-            <VideoDescription description={details?.snippet?.description} viewCount={FormatNumber(details?.statistics?.viewCount)} publishedAt={details?.snippet?.publishedAt} tags={details?.snippet?.tags}/>
+            <VideoDescription
+              description={details?.snippet?.description}
+              viewCount={FormatNumber(details?.statistics?.viewCount||0)}
+              publishedAt={details?.snippet?.publishedAt}
+              tags={details?.snippet?.tags}
+            />
           </div>
         </div>
 
@@ -300,7 +307,9 @@ const VideoPlayer = () => {
       </div>
 
       {/* Placeholder for additional content */}
-      <div className="w-[38vw]"><SidePopular/></div>
+      <div className="max-w-[38vw]">
+        <SidePopular />
+      </div>
     </div>
   );
 };

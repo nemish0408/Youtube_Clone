@@ -1,5 +1,5 @@
 
-const GOOGLE_API_KEY = "AIzaSyBkTSiwfHDi6hMtoVoQ-u6eXP7uLWttYfI";
+const GOOGLE_API_KEY = "AIzaSyC39EBIFmZbJBaWInHR0XA5QOU6cf_M9cA";
 
 export const YOUTUBE_VIDEO_URL =
   "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=IN&key=" +
@@ -14,4 +14,7 @@ export const CHANNEL_LOGO_URL = "https://youtube.googleapis.com/youtube/v3/chann
 export const CHANNEL_LOGO_URL_EXT = "&key="+GOOGLE_API_KEY
 
 export const SEARCH_VIDEO_URL = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=200&q="
-export const SEARCH_VIDEO_URL_EXT = "&key="
+export const SEARCH_VIDEO_URL_EXT = "&key="+GOOGLE_API_KEY
+
+export const VIDEO_DETAILS_URL="https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id="
+export const VIDEO_DETAILS_URL_EXT="&key="+GOOGLE_API_KEY

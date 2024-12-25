@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SEARCH_VIDEO_URL, SEARCH_VIDEO_URL_EXT } from "./constants";
 
 const searchResultSlice = createSlice({
   name: "searchResult",
@@ -13,23 +12,13 @@ const searchResultSlice = createSlice({
       state.FilteredResults = action.payload;
 
       // Save initial FilteredResults to local storage
-      localStorage.setItem("FilteredResults", JSON.stringify(state.FilteredResults));
+      localStorage.setItem("Results", JSON.stringify(state.Results));
     },
     setFilter: (state, action) => {
-      const filterText = action.payload.toLowerCase();
-      if (filterText === "") {
-        state.FilteredResults = state.Results;
-      } else {
-        state.FilteredResults = async()=>{
-          const searchUrl = `${SEARCH_VIDEO_URL}${filterText}${SEARCH_VIDEO_URL_EXT}`;
-          const response = await fetch(searchUrl)
-          console.log(response.json());
-          
-            return response.json()
-
-          
-        }
-      }
+      
+        state.FilteredResults = action.payload
+        
+// console.log(state.FilteredResults);
 
       // Save updated FilteredResults to local storage
       localStorage.setItem("FilteredResults", JSON.stringify(state.FilteredResults));

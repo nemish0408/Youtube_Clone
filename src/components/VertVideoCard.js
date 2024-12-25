@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"; // Correct import for Link
 import { getTimeAgo } from "../utils/getTimeAgo";
 import { FormatNumber } from "../utils/formatNumber";
 
-const VertVideoCard = ({ info }) => {
+const   VertVideoCard = ({ info }) => {
   const { snippet, statistics, id } = info;
 
   return (
@@ -14,7 +14,7 @@ const VertVideoCard = ({ info }) => {
           <img
             alt="thumbnail"
             src={snippet?.thumbnails?.medium?.url}
-            className="w-full h-full object-fit"
+            className="w-full h-full object-cover"
           />
         </div>
 

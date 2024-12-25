@@ -1,52 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { YOUTUBE_VIDEO_URL } from "../utils/constants";
-import VideoCard, { AdVideocard } from "./VideoCard";
-import { useDispatch, useSelector } from "react-redux";
+import VideoCard from "./VideoCard";
+import { useDispatch } from "react-redux";
 import { setResults } from "../utils/searchResultSlice";
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const dispatch = useDispatch();
-  const filtered = useSelector((store) => store.searchResult.FilteredResults);
-  // console.log(filtered);
 
+  // Load initial filtered results from local storage
   useEffect(() => {
-    getVideos();
-  }, []); // Fetch videos when the component mounts
+    const savedFiltered = JSON.parse(localStorage.getItem("Results") || "[]");
+    setFiltered(savedFiltered);
+  }, []); // Run only once when the component mounts
 
+  // Fetch videos from API
+  useEffect(() => {
+    const getVideos = async () => {
+      try {
+        const data = await fetch(YOUTUBE_VIDEO_URL);
+        const json = await data.json();
+        setVideos(json.items || []); // Set videos or an empty array
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+
+    getVideos();
+  }, []); // Run only once when the component mounts
+
+  // Update Redux store when videos are fetched
   useEffect(() => {
     if (videos.length > 0) {
-      // Dispatch setResults whenever the videos are updated
       dispatch(setResults(videos));
     }
-  }, [videos, dispatch]); // Runs whenever videos state changes
-
-  const getVideos = async () => {
-    try {
-      const data = await fetch(YOUTUBE_VIDEO_URL);
-      const json = await data.json();
-      setVideos(json.items || []); // Set to empty array if no items
-      // console.log(json);
-      
-    } catch (error) {
-      console.error("Error fetching videos:", error);
-    }
-  };
+  }, [videos, dispatch]); // Run whenever videos change
 
   return (
     <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5">
-      {/* Optional: Display an ad video at the top */}
-      {/* {videos[0] && <AdVideocard info={videos[0]} />} */}
-      
       {/* Map through filtered results */}
       {filtered.length > 0 ? (
-        filtered.map((item, index) => {
-          return (
-            <div className="shadow-md rounded-lg w-full" key={index}>
-              <VideoCard info={item} />
-            </div>
-          );
-        })
+        filtered.map((item, index) => (
+          <div className="shadow-md rounded-lg w-full" key={index}>
+            <VideoCard info={item} />
+          </div>
+        ))
       ) : (
         <div>No videos found.</div>
       )}

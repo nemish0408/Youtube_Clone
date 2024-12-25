@@ -1,16 +1,25 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
-import { SEARCH_API_URL } from "../utils/constants";
+import {
+  SEARCH_API_URL,
+  SEARCH_VIDEO_URL,
+  SEARCH_VIDEO_URL_EXT,
+} from "../utils/constants";
 import { Link } from "react-router-dom";
 import { setFilter } from "../utils/searchResultSlice";
+import { useLocation, useNavigate } from "react-router";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchSugg, setSearchSugg] = useState([]);
   const [searchKey, setSearchKey] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const debounceTimer = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation(); // to track current URL location
+
 
   const getVideos = async (searchText) => {
     try {
@@ -39,13 +48,64 @@ const Head = () => {
     }, 300);
   };
 
-  const handleSearch = () => {
-    dispatch(setFilter(searchKey));
+  const handleSearch = async () => {
+    const searchUrl = `${SEARCH_VIDEO_URL}${searchKey}${SEARCH_VIDEO_URL_EXT}`;
+    const response = await fetch(searchUrl);
+    const json = await response.json();
+    dispatch(setFilter(json));
+    if (location.pathname.includes("/search")) {
+      localStorage.setItem("searchKey", searchKey);
+    }
+    navigate("/search=/" + searchKey);
+    setIsFocused(false);
   };
 
-  const toggleMenuHandler = () => {
-    dispatch(toggleMenu());
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      setSelectedIndex((prevIndex) =>
+        Math.min(prevIndex + 1, searchSugg.length - 1)
+      );
+    } else if (e.key === "ArrowUp") {
+      setSelectedIndex((prevIndex) => Math.max(prevIndex - 1, -1));
+    } else if (e.key === "Enter") {
+      if (selectedIndex >= 0 && selectedIndex < searchSugg.length) {
+        setSearchKey(searchSugg[selectedIndex]);
+      }
+      setIsFocused(false);
+      handleSearch();
+      e.preventDefault();
+    } else if (e.key === "Escape") {
+      setIsFocused(false);
+    }
   };
+
+  useEffect(() => {
+    const savedSearchKey = localStorage.getItem("searchKey"); // Retrieve the search key from localStorage
+    if (savedSearchKey) {
+      setSearchKey(savedSearchKey);
+      getVideos(savedSearchKey); // Optionally fetch suggestions
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedIndex >= 0 && selectedIndex < searchSugg.length) {
+      setSearchKey(searchSugg[selectedIndex]);
+    }
+  }, [selectedIndex, searchSugg]);
+  useEffect(() => {
+    // Only retrieve the searchKey if we're on the search page
+    if (location.pathname.startsWith("/search")) {
+      const savedSearchKey = localStorage.getItem("searchKey");
+      if (savedSearchKey) {
+        setSearchKey(savedSearchKey);
+      } else {
+        setSearchKey(''); // Clear the search key if not found in localStorage
+      }
+    } else {
+      setSearchKey(''); // Clear search key when not on the search page
+    }
+  }, [location.pathname]);
+  
 
   useEffect(() => {
     return () => {
@@ -60,12 +120,12 @@ const Head = () => {
       <div className="flex justify-between items-center px-4 md:px-6 py-2">
         {/* Left Section */}
         <div className="flex items-center">
-          <button onClick={toggleMenuHandler} className="p-2">
-              <img
-                src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"
-                alt="Menu"
-                className="w-6 md:w-8"
-              />
+          <button onClick={() => dispatch(toggleMenu())} className="p-2">
+            <img
+              src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"
+              alt="Menu"
+              className="w-6 md:w-8"
+            />
           </button>
           <Link to="/" className="ml-4 hidden md:block">
             <img
@@ -87,52 +147,57 @@ const Head = () => {
               onChange={handleInputChange}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              onKeyDown={handleKeyDown}
             />
             <button
               className="border border-gray-300 rounded-r-full bg-gray-100 px-4 py-2 hover:bg-gray-200"
-              onClick={handleSearch}
+              onClick={() => handleSearch()}
             >
               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M8 16a6 6 0 100-12 6 6 0 000 12zm8 0l4 4"
-                  />
-                </svg>
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M8 16a6 6 0 100-12 6 6 0 000 12zm8 0l4 4"
+                />
+              </svg>
             </button>
             {searchSugg.length > 0 && isFocused && (
-            <div className="absolute top-full mt-2 bg-white shadow-lg w-full max-w-3xl rounded-lg z-10">
-              <ul className="py-2">
-                {searchSugg.map((item, index) => (
-                  <li
-                    key={index}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => setSearchKey(item)}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+              <div className="absolute top-full mt-2 bg-white shadow-lg w-full max-w-3xl rounded-lg z-10">
+                <ul className="py-2">
+                  {searchSugg.map((item, index) => (
+                    <li
+                      key={index}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setSearchKey(item);
+                        handleSearch();
+                      }}
+                      className={`px-4 py-2 cursor-pointer ${
+                        index === selectedIndex
+                          ? "bg-gray-200"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-
-          {/* Search Suggestions */}
-          
         </div>
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
           <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full flex">
-          <svg
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               enableBackground="new 0 0 24 24"
               height="30"
