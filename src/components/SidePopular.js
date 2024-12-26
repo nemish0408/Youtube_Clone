@@ -4,7 +4,6 @@ import VertVideoCard from "./VertVideoCard";
 
 const SidePopular = () => {
   const info = JSON.parse(localStorage.getItem("Results") || "[]");
-  // console.log(info);
 
   return (
     <div className="max-w-[38vw]">

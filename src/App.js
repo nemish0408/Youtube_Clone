@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import VideoPlayer from "./components/VideoPlayer";
 import Sidebar from "./components/Sidebar";
 import SearchVideoCard from "./components/searchVideoCard";
+import PlayList from "./components/PlayList";
 
 function App() {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<Body />}></Route>
               <Route path="/videoplayer/:id" element={<VideoPlayer />}></Route>
               <Route path={"/search=/:id"} element={<SearchVideoCard />}></Route>
+              <Route path={"/playlist/:id"} element={<PlayList />}></Route>
             </Routes>
           </div>
         </div>

@@ -1,68 +1,85 @@
 import React, { useEffect, useState } from "react";
 import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT } from "../utils/constants";
-import { Link } from "react-router";
-import { getTimeAgo } from "../utils/getTimeAgo";
+import { Link } from "react-router-dom"; // Corrected to react-router-dom
+import { getTimeAgo } from "../utils/functions/getTimeAgo";
+import useFetch from "../utils/functions/fetchURL";
 
 const VideoCard1 = ({ info }) => {
   const { id, snippet } = info;
-  const idext = id?.videoId || id?.playlistId || id?.channelId
-console.log(info);
+  const idext = id?.videoId || id?.playlistId || id?.channelId;
 
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
-
-  const fetchChannelLogo = async (channelId) => {
-    try {
-      const response = await fetch(
-        `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
-      );
-      const json = await response.json();
-      const logoUrl = json?.items[0]?.snippet?.thumbnails?.default?.url || "";
-      setChannelLogoUrl(logoUrl);
-    } catch (error) {
-      console.error("Error fetching channel logo:", error);
-    }
-  };
+  const {
+    data: json,
+    loading,
+    error,
+  } = useFetch(
+    snippet?.channelId
+      ? `${CHANNEL_LOGO_URL}${snippet.channelId}${CHANNEL_LOGO_URL_EXT}`
+      : null
+  );
 
   useEffect(() => {
-    if (snippet?.channelId) {
-      fetchChannelLogo(snippet.channelId);
+    if (json && json.items && json.items[0]) {
+      const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
+      setChannelLogoUrl(logoUrl);
     }
-  }, [snippet?.channelId]);
-if(idext)
-  {return (
-    <div>
-    <Link to={id?.videoId ? `/videoplayer/${id.videoId}` : ''} rel="noreferrer">
+  }, [json]); // This runs when json changes
 
+  if (!idext) return null; // Return null if no valid id is found
+
+  return (
+    <div>
+      <Link
+        to={
+          id.videoId
+            ? `/videoplayer/${id.videoId}`
+            : id.playlistId
+            ? `/playlist/${id.playlistId}`
+            : id.channelId
+            ? `/channel/${id.channelId}`
+            : ""
+        }
+        rel="noreferrer"
+      >
         <div className="w-full relative overflow-hidden">
           <div className="w-full relative rounded-lg hover:rounded-none hover:scale-[1.01]">
             <img
               alt="thumbnail"
               src={snippet.thumbnails.medium.url}
-              className="w-full rounded-lg hover:rounded-none hover:scale-[1.01]"
-            ></img>
+              className="rounded-lg hover:rounded-none object-fill mx-auto   h-[175px] hover:scale-[1.01]"
+            />
           </div>
           <div className="px-4 py-2">
             <div className="flex items-top space-x-2">
-              {channelLogoUrl && (
+              {loading ? (
+                <div className="w-10 h-10 rounded-full bg-gray-200" />
+              ) : error ? (
+                <div className="w-10 h-10 rounded-full bg-gray-300" />
+              ) : channelLogoUrl ? (
                 <img
                   className="w-10 h-10 rounded-full"
                   src={channelLogoUrl}
                   alt="Channel Logo"
                 />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-300" />
               )}
               <div className="w-full">
                 <p className="font-semibold text-sm text-gray-800 w-full line-clamp-2">
                   {snippet.title}
                 </p>
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <p>{snippet.channelTitle}  </p>
+                  <p>{snippet.channelTitle}</p>
                 </div>
                 <div className="flex justify-between">
-                  {/* <p className="text-xs text-gray-500 mt-1">
-                    {FormatNumber(statistics.viewCount)} views
-                  </p> */}
                   <p className="text-xs text-gray-500 mt-1">
-                    {getTimeAgo(snippet.publishedAt)} <span className="font-semibold">{id.videoId?"Video":""}{id.playlistId?"PlayList":""}{id.channelId?"Channel":""}</span>
+                    {getTimeAgo(snippet.publishedAt)} •{" "}
+                    <span className="font-semibold">
+                      {id.videoId ? "Video" : ""}
+                      {id.playlistId ? "PlayList" : ""}
+                      {id.channelId ? "Channel" : ""}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -72,9 +89,6 @@ if(idext)
       </Link>
     </div>
   );
-}
-else{
-return null
-}
-}
+};
+
 export default VideoCard1;

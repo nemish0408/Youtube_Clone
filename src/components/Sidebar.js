@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom"; // Corrected Link import
+import { Link } from "react-router-dom";
 import { toggleMenu } from "../utils/appSlice";
 
 const Sidebar = () => {
@@ -9,7 +9,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Sidebar Toggle Button */}
       <button
         onClick={() => dispatch(toggleMenu())}
         className="fixed top-4 left-4 z-30 bg-gray-800 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg md:hidden"
@@ -21,30 +20,38 @@ const Sidebar = () => {
         />
       </button>
 
-      {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full bg-white shadow-lg overflow-y-auto scrollbar-hidden z-20 transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0 md:w-[14vw] w-[80vw]`}
       >
         <div className="py-4">
-          {/* Main Navigation */}
           <div>
-            <Link to="/" className="flex items-center py-3 px-4 hover:bg-gray-100">
+            <Link
+              to="/"
+              className="flex items-center py-3 px-4 hover:bg-gray-100"
+            >
               <img
                 src="https://img.icons8.com/ios-filled/50/000000/home.png"
                 alt="Home"
                 className="w-6 h-6"
               />
-              <span className="ml-4 text-sm md:text-base font-medium">Home</span>
+              <span className="ml-4 text-sm md:text-base font-medium">
+                Home
+              </span>
             </Link>
-            <Link to="/shorts" className="flex items-center py-3 px-4 hover:bg-gray-100">
+            <Link
+              to="/shorts"
+              className="flex items-center py-3 px-4 hover:bg-gray-100"
+            >
               <img
                 src="https://img.icons8.com/ios-filled/50/000000/film-reel.png"
                 alt="Shorts"
                 className="w-6 h-6"
               />
-              <span className="ml-4 text-sm md:text-base font-medium">Shorts</span>
+              <span className="ml-4 text-sm md:text-base font-medium">
+                Shorts
+              </span>
             </Link>
             <Link
               to="/subscriptions"
@@ -55,23 +62,31 @@ const Sidebar = () => {
                 alt="Subscriptions"
                 className="w-6 h-6"
               />
-              <span className="ml-4 text-sm md:text-base font-medium">Subscriptions</span>
+              <span className="ml-4 text-sm md:text-base font-medium">
+                Subscriptions
+              </span>
             </Link>
           </div>
 
           <hr className="my-4 border-gray-300" />
 
-          {/* Explore Section */}
           <div>
-            <h1 className="px-4 py-2 text-xs font-bold text-gray-600">Explore</h1>
+            <h1 className="px-4 py-2 text-xs font-bold text-gray-600">
+              Explore
+            </h1>
             <ul>
-              <Link to="/videoplayer" className="flex items-center py-3 px-4 hover:bg-gray-100">
+              <Link
+                to="/videoplayer"
+                className="flex items-center py-3 px-4 hover:bg-gray-100"
+              >
                 <img
                   src="https://img.icons8.com/ios-filled/50/000000/fire-element.png"
                   alt="Trending"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Trending</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Trending
+                </span>
               </Link>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -79,7 +94,9 @@ const Sidebar = () => {
                   alt="Shopping"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Shopping</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Shopping
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -87,7 +104,9 @@ const Sidebar = () => {
                   alt="Movies"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Movies</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Movies
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -95,7 +114,9 @@ const Sidebar = () => {
                   alt="Music"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Music</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Music
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -103,7 +124,9 @@ const Sidebar = () => {
                   alt="Live"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Live</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Live
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -111,7 +134,9 @@ const Sidebar = () => {
                   alt="News"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">News</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  News
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -119,7 +144,9 @@ const Sidebar = () => {
                   alt="Sports"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Sports</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Sports
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -127,7 +154,9 @@ const Sidebar = () => {
                   alt="Courses"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Courses</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Courses
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -135,7 +164,9 @@ const Sidebar = () => {
                   alt="Fashion & Beauty"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Fashion & Beauty</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Fashion & Beauty
+                </span>
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-gray-100">
                 <img
@@ -143,7 +174,9 @@ const Sidebar = () => {
                   alt="Podcasts"
                   className="w-6 h-6"
                 />
-                <span className="ml-4 text-sm md:text-base font-medium">Podcasts</span>
+                <span className="ml-4 text-sm md:text-base font-medium">
+                  Podcasts
+                </span>
               </li>
             </ul>
           </div>

@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
-import { getTimeAgo } from "../utils/getTimeAgo";
-import { FormatNumber } from "../utils/formatNumber";
+import { Link } from "react-router-dom";
+import { getTimeAgo } from "../utils/functions/getTimeAgo";
+import { FormatNumber } from "../utils/functions/formatNumber";
 import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT } from "../utils/constants";
+import useFetch from "../utils/functions/fetchURL";
 
 const VideoCard = ({ info }) => {
   const { snippet, statistics, id, contentDetails } = info;
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
+  const [channelId, setChannelId] = useState("");
 
-  const fetchChannelLogo = async (channelId) => {
-    try {
-      const response = await fetch(
-        `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
-      );
-      const json = await response.json();
-      const logoUrl =
-        json?.items[0]?.snippet?.thumbnails?.default?.url || "";
-      setChannelLogoUrl(logoUrl);
-    } catch (error) {
-      console.error("Error fetching channel logo:", error);
-    }
-  };
+  const {
+    data: json,
+    loading,
+    error,
+  } = useFetch(`${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`);
 
   useEffect(() => {
     if (snippet.channelId) {
-      fetchChannelLogo(snippet.channelId);
+      setChannelId(snippet.channelId);
     }
-  }, [snippet.channelId]); // Depend on channelId to fetch logo
+  }, [snippet.channelId]);
+
+  useEffect(() => {
+    if (json && json.items && json.items[0]) {
+      const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
+      setChannelLogoUrl(logoUrl);
+    }
+  }, [json]);
 
   return (
     <Link to={"/videoplayer/" + id} rel="noreferrer">
@@ -43,12 +44,18 @@ const VideoCard = ({ info }) => {
         </div>
         <div className="px-4 py-2">
           <div className="flex items-top space-x-2">
-            {channelLogoUrl && (
+            {loading ? (
+              <div className="w-10 h-10 rounded-full bg-gray-200" />
+            ) : error ? (
+              <div className="w-10 h-10 rounded-full bg-gray-300" />
+            ) : channelLogoUrl ? (
               <img
                 className="w-10 h-10 rounded-full"
                 src={channelLogoUrl}
                 alt="Channel Logo"
               />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-300" />
             )}
             <div className="w-full">
               <p className="font-semibold text-sm text-gray-800 w-full line-clamp-2">
@@ -57,23 +64,15 @@ const VideoCard = ({ info }) => {
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <p>{snippet.channelTitle}</p>
               </div>
-              <div className="flex justify-between">
-                <p className="text-xs text-gray-500 mt-1">{FormatNumber(statistics.viewCount)} views</p>
-              <p className="text-xs text-gray-500 mt-1">{getTimeAgo(snippet.publishedAt)}</p>
-              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                {FormatNumber(statistics.viewCount)} views •{" "}
+                {getTimeAgo(snippet.publishedAt)}
+              </p>
             </div>
           </div>
         </div>
       </div>
     </Link>
-  );
-};
-
-export const AdVideocard = ({ info }) => {
-  return (
-    <div className="border-2 border-red-500">
-      <VideoCard info={info}></VideoCard>
-    </div>
   );
 };
 

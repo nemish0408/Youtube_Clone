@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Correct import for Link
-import { getTimeAgo } from "../utils/getTimeAgo";
-import { FormatNumber } from "../utils/formatNumber";
+import { getTimeAgo } from "../utils/functions/getTimeAgo";
+import { FormatNumber } from "../utils/functions/formatNumber";
 
 const   VertVideoCard = ({ info }) => {
   const { snippet, statistics, id } = info;
@@ -29,8 +29,7 @@ const   VertVideoCard = ({ info }) => {
           <div className="mt-2">
             <p className="text-gray-500 text-sm">{snippet?.channelTitle}</p>
             <p className="text-gray-500 text-sm mt-1">
-              {FormatNumber(statistics?.viewCount)} views •{" "}
-              {getTimeAgo(snippet?.publishedAt)}
+              {FormatNumber(statistics?.viewCount)} views • {getTimeAgo(snippet?.publishedAt)}
             </p>
           </div>
         </div>

@@ -6,26 +6,32 @@ const VideoDescription = ({ description, viewCount, publishedAt, tags }) => {
   const toggleDescription = () => {
     setShowFullDescription((prev) => !prev);
   };
-
-  const truncatedDescription = description?.slice(0, 200); // Adjust truncation length as needed
-
-  // Format the date with the month in words
+  const truncatedDescription = description?.slice(0, 200);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
-    const month = months[date.getMonth()]; // Get the month name
+    const month = months[date.getMonth()];
     const day = date.getDate().toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${month} ${day}, ${year}`;
   };
 
-  // Format tags with a '#' prefix
   const formattedTags = tags
-  ?.map((tag) => `#${tag.replace(/\s+/g, "")}`)
-  .join(", ");
+    ?.map((tag) => `#${tag.replace(/\s+/g, "")}`)
+    .join(", ");
 
   return (
     <div className="mt-4 rounded-lg bg-[#dbdbdb] p-3">

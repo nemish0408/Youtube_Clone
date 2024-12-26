@@ -1,9 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
+import { CATEGORY_URL } from "../utils/constants";
+import useFetch from "../utils/functions/fetchURL";
+import { useNavigate } from "react-router";
 
 const ButtonList = () => {
   const listRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [Category, setCategory] = useState([]);
+  const navigate = useNavigate();
+  
+  const { data: json } = useFetch(CATEGORY_URL);
+
+  useEffect(() => {
+    if (json?.items) {
+      setCategory(json.items);
+    }
+  }, [json]);
 
   // Update scroll button visibility
   const updateScrollButtons = () => {
@@ -47,6 +60,12 @@ const ButtonList = () => {
     };
   }, []);
 
+  // Handle category click to store search key and navigate
+  const handleCategoryClick = async (categoryTitle) => {
+   await localStorage.setItem("searchKey", categoryTitle); // Set the category as search key in localStorage
+   await navigate(`/search=/${categoryTitle}`); // Navigate to the search page with the query parameter
+  };
+
   return (
     <div className="relative flex items-center max-w-full">
       {/* Scroll Buttons */}
@@ -73,37 +92,13 @@ const ButtonList = () => {
         ref={listRef}
       >
         <ul className="flex gap-3">
-          {[
-            "All",
-            "Music",
-            "Playlists",
-            "Live",
-            "Javascript",
-            "News",
-            "Amit Trivedi",
-            "Alan Walker",
-            "Jubin Nautiyal",
-            "React Redux",
-            "Context",
-            "Provider",
-            "All",
-            "Music",
-            "Playlists",
-            "Live",
-            "Javascript",
-            "News",
-            "Amit Trivedi",
-            "Alan Walker",
-            "Jubin Nautiyal",
-            "React Redux",
-            "Context",
-            "Provider",
-          ].map((label, index) => (
+          {Category.map((label, index) => (
             <li
               key={index}
+              onClick={() => handleCategoryClick(label?.snippet?.title)} // Handle category click
               className="text-sm text-gray-900 bg-gray-200 hover:bg-gray-300 inline-block whitespace-nowrap px-4 py-2 rounded-full cursor-pointer"
             >
-              {label}
+              {label?.snippet?.title}
             </li>
           ))}
         </ul>

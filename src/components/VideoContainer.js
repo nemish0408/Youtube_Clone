@@ -3,43 +3,32 @@ import { YOUTUBE_VIDEO_URL } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import { useDispatch } from "react-redux";
 import { setResults } from "../utils/searchResultSlice";
+import useFetch from "../utils/functions/fetchURL";
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const dispatch = useDispatch();
-
-  // Load initial filtered results from local storage
+  const { data: json, loading, error } = useFetch(YOUTUBE_VIDEO_URL);
+  const getVideos = async () => {
+    setVideos(json.items || []);
+  };
   useEffect(() => {
     const savedFiltered = JSON.parse(localStorage.getItem("Results") || "[]");
     setFiltered(savedFiltered);
-  }, []); // Run only once when the component mounts
+    if (json && json.items && json.items[0]) {
+      getVideos();
+    }
+  }, []);
 
-  // Fetch videos from API
-  useEffect(() => {
-    const getVideos = async () => {
-      try {
-        const data = await fetch(YOUTUBE_VIDEO_URL);
-        const json = await data.json();
-        setVideos(json.items || []); // Set videos or an empty array
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
-
-    getVideos();
-  }, []); // Run only once when the component mounts
-
-  // Update Redux store when videos are fetched
   useEffect(() => {
     if (videos.length > 0) {
       dispatch(setResults(videos));
     }
-  }, [videos, dispatch]); // Run whenever videos change
+  }, [videos, dispatch]);
 
   return (
     <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5">
-      {/* Map through filtered results */}
       {filtered.length > 0 ? (
         filtered.map((item, index) => (
           <div className="shadow-md rounded-lg w-full" key={index}>
