@@ -73,8 +73,8 @@ const VideoPlayer = () => {
   }
 
   return (
-    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 p-4 max-w-full">
-      <div className="md:lg:col-span-2 w-full">
+    <div className="grid md:grid-flow-col lg:w-[100vw] md:grid-cols-3 gap-4 lg:p-4 max-w-full">
+      <div className="col-span-3 lg:col-span-2">
         <div className="relative w-full aspect-w-16 aspect-h-9">
           <iframe
             src={`https://www.youtube.com/embed/${id}?autoplay=1`}
@@ -82,14 +82,14 @@ const VideoPlayer = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             width="100%"
-            height="450"
-            className="rounded-xl"
+            height=""
+            className="rounded-xl h-56 lg:h-[450px]"
           ></iframe>
         </div>
 
         <div>
           <h1 className="pt-4 text-xl font-bold">{details.snippet?.title}</h1>
-          <div className="flex items-center gap-4 pt-2 justify-between">
+          <div className="flex flex-wrap items-center gap-4 pt-2 justify-center">
             <div className="flex gap-2">
               {channelLogoUrl && (
                 <img
@@ -118,17 +118,17 @@ const VideoPlayer = () => {
               </div>
             </div>
 
-            <div className="flex">
-              <button className="flex text-black pe-2.5 rounded-l-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
+            <div className="flex flex-wrap">
+              <button className="flex text-black p-1 rounded-l-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
                 <LikeLogo />
                 <span className="inline self-center font-semibold">Like</span>
               </button>
-              <button className="flex text-black rounded-r-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
-                <LikeLogo style={{ transform: "rotate(180deg)" }} />
+              <button style={{ transform: "rotate(180deg)" }} className="flex text-black rounded-l-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
+                <LikeLogo  />
               </button>
               <button className="px-3 py-2 flex ms-2 text-black rounded-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
                 <ShareLogo />
-                <span className="ms-1.5 font-semibold">Share</span>
+                <span className="ms-1.5 font-semibold block">Share</span>
               </button>
               <button className="px-2 py-2 flex ms-2 text-black rounded-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
                 <ThreeDots />
@@ -148,7 +148,7 @@ const VideoPlayer = () => {
         <Comments id={id} CommentCount={commentCount} />
       </div>
 
-      <div className="max-w-[38vw]">
+      <div className="w-full lg:max-w-[38vw]">
         <SidePopular />
       </div>
     </div>

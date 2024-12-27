@@ -11,10 +11,10 @@ const Sidebar = () => {
     <>
       <button
         onClick={() => dispatch(toggleMenu())}
-        className="fixed top-4 left-4 z-30 bg-gray-800 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg md:hidden"
+        className="fixed top-4 left-4 z-30 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg md:hidden"
       >
         <img
-          src="https://img.icons8.com/ios-filled/50/ffffff/menu.png"
+          src="https://img.icons8.com/?size=100&id=aJXCfqpXgZUC&format=png&color=000000"
           alt="Menu"
           className="w-6 h-6"
         />
@@ -25,7 +25,7 @@ const Sidebar = () => {
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0 md:w-[14vw] w-[80vw]`}
       >
-        <div className="py-4">
+        <div className="mt-16 lg:py-4">
           <div>
             <Link
               to="/"

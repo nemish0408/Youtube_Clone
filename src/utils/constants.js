@@ -1,4 +1,4 @@
-const GOOGLE_API_KEY = "AIzaSyAwkqZ-JxWqH7uoI2jmglHLFAph1PSJIWQ";
+const GOOGLE_API_KEY = "AIzaSyBxeqlUkBVHYLgL1tsBlULBbdfS1LLmjWs";
 
 export const YOUTUBE_VIDEO_URL =
   "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=IN&key=" +
@@ -33,3 +33,8 @@ export const PLAYLIST_ITEMS_URL =
   "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="
  // Replace with your actual API key
  export const PLAYLIST_ITEMS_URL_EXT = "&key="+GOOGLE_API_KEY
+
+ export const SEARCH_CHANNEL_VIDEOS_URL = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=200&&key="+GOOGLE_API_KEY+"&channelId="
+
+ export const CHANNEL_DETAILS_URL =
+  "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&key="+GOOGLE_API_KEY+"&id=";

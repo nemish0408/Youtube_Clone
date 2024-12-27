@@ -10,8 +10,11 @@ const VideoContainer = () => {
   const [filtered, setFiltered] = useState([]);
   const dispatch = useDispatch();
   const { data: json, loading, error } = useFetch(YOUTUBE_VIDEO_URL);
-  const getVideos = async () => {
-    setVideos(json.items || []);
+  const getVideos = () => {
+    setVideos(json?.items);
+    console.log(json);
+    
+    // await dispatch(setResults(json.items))
   };
   useEffect(() => {
     const savedFiltered = JSON.parse(localStorage.getItem("Results") || "[]");
@@ -19,13 +22,13 @@ const VideoContainer = () => {
     if (json && json.items && json.items[0]) {
       getVideos();
     }
-  }, []);
+  }, [json]);
 
   useEffect(() => {
     if (videos.length > 0) {
       dispatch(setResults(videos));
     }
-  }, [videos, dispatch]);
+  }, [videos]);
 
   return (
     <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5">

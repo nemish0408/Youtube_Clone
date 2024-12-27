@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
 import VideoCard1 from "./Videocard1";
 import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import { setFilter } from "../utils/searchResultSlice";
+import { SEARCH_VIDEO_URL, SEARCH_VIDEO_URL_EXT } from "../utils/constants";
 
 const SearchVideoCard = () => {
   const [filtered, setFiltered] = useState([]);
   const keyw = useParams();
+  console.log(keyw.id);
+  
+  const dispatch = useDispatch();
+  // const location = useLocation();
+
+  // const searchKey = localStorage.getItem("searchKey");
+  // console.log(searchKey);
 
   const fetchFilteredResults = () => {
     try {
@@ -17,16 +27,26 @@ const SearchVideoCard = () => {
       setFiltered([]);
     }
   };
-
+  const handleSearch = async () => {
+    const searchUrl = `${SEARCH_VIDEO_URL}${keyw.id}${SEARCH_VIDEO_URL_EXT}`;
+    const response = await fetch(searchUrl);
+    const json = await response.json();
+    dispatch(setFilter(json));
+  };
   useEffect(() => {
-    fetchFilteredResults();
-
+    const fetchAndSetResults = async () => {
+      await handleSearch(); // Wait for handleSearch to complete
+      fetchFilteredResults(); // Then run fetchFilteredResults
+    };
+  
+    fetchAndSetResults();
+  
     const handleStorageChange = () => {
       fetchFilteredResults();
     };
-
+  
     window.addEventListener("storage", handleStorageChange);
-
+  
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
@@ -34,10 +54,10 @@ const SearchVideoCard = () => {
 
   return (
     <div className="min-w-[83vw] max-w-[98vw] overflow-y-scroll scrollbar-hidden max-h-[85vh] pt-5">
-      <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5">
+      <div className="grid grid-cols-1 gap-5 p-5">
         {filtered?.items?.length > 0 ? (
           filtered?.items?.map((item, index) => (
-            <div className="shadow-md rounded-lg w-full max-h-full" key={index}>
+            <div className="shadow-md lg:shadow-none lg:hover:shadow-md  rounded-lg w-full max-h-full" key={index}>
               <VideoCard1 info={item} />
             </div>
           ))

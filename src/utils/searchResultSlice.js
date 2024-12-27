@@ -8,11 +8,13 @@ const searchResultSlice = createSlice({
   },
   reducers: {
     setResults: (state, action) => {
-      state.Results = action.payload;
-      state.FilteredResults = action.payload;
+  const results = action.payload || []; // Default to an empty array if action.payload is undefined or null
+  state.Results = results;
+  state.FilteredResults = results;
 
-      // Save initial FilteredResults to local storage
-      localStorage.setItem("Results", JSON.stringify(state.Results));
+  // Save initial FilteredResults to local storage
+  localStorage.setItem("Results", JSON.stringify(state.Results));
+        
     },
     setFilter: (state, action) => {
       

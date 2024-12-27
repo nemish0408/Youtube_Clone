@@ -71,7 +71,7 @@ const ButtonList = () => {
       {/* Scroll Buttons */}
       {canScrollLeft && (
         <button
-          className="absolute left-0 z-10 bg-gradient-to-r from-gray-900 to-transparent text-white px-2 py-2 rounded-full focus:outline-none hover:bg-gray-800"
+          className="absolute left-0 z-10 lg:bg-gradient-to-r lg:from-gray-900 lg:to-transparent lg:text-white px-2 py-2 rounded-full lg:focus:outline-none lg:hover:bg-gray-800"
           onClick={scrollLeft}
         >
           <span className="material-icons pt-1">chevron_left</span>
@@ -79,7 +79,7 @@ const ButtonList = () => {
       )}
       {canScrollRight && (
         <button
-          className="absolute right-0 z-10 bg-gradient-to-l from-gray-900 to-transparent text-white px-2 py-2 rounded-full focus:outline-none hover:bg-gray-800"
+          className="absolute right-0 z-10 lg:bg-gradient-to-l lg:from-gray-900 lg:to-transparent lg:text-white px-2 py-2 rounded-full lg:focus:outline-none lg:hover:bg-gray-800"
           onClick={scrollRight}
         >
           <span className="material-icons pt-1">chevron_right</span>

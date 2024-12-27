@@ -34,7 +34,7 @@ const VideoDescription = ({ description, viewCount, publishedAt, tags }) => {
     .join(", ");
 
   return (
-    <div className="mt-4 rounded-lg bg-[#dbdbdb] p-3">
+    <div className="w-[98vw] lg:w-full mt-4 rounded-lg bg-[#dbdbdb] p-3">
       <p className="text-gray-700 font-bold flex gap-3 text-nowrap">
         {viewCount?.toLocaleString()} views{" "}
         <span>{publishedAt ? formatDate(publishedAt) : ""}</span>

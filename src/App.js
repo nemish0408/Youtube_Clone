@@ -6,6 +6,7 @@ import VideoPlayer from "./components/VideoPlayer";
 import Sidebar from "./components/Sidebar";
 import SearchVideoCard from "./components/searchVideoCard";
 import PlayList from "./components/PlayList";
+import ChannelPage from "./components/ChannelPage";
 
 function App() {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
@@ -13,16 +14,17 @@ function App() {
     <div>
       <BrowserRouter>
         <Head />
-        <div className="grid grid-flow-col w-[98vw] pt-[10px]">
+        <div className="grid grid-flow-col w-[100vw] pt-[10px]">
           <div className={isMenuOpen ? "max-w-[15vw] max-h-[82vh]" : "hidden"}>
             <Sidebar />
           </div>
-          <div className="min-w-[83vw] max-w-[98vw] w-full overflow-y-scroll overflow-x-scroll scrollbar-hidden max-h-[85vh] pt-5">
+          <div className="min-w-[83vw] max-w-[100 vw] w-full overflow-y-scroll overflow-x-scroll scrollbar-hidden max-h-[85vh] pt-5">
             <Routes>
               <Route path="/" element={<Body />}></Route>
               <Route path="/videoplayer/:id" element={<VideoPlayer />}></Route>
               <Route path={"/search=/:id"} element={<SearchVideoCard />}></Route>
               <Route path={"/playlist/:id"} element={<PlayList />}></Route>
+              <Route path={"/channel/:id"} element={<ChannelPage />}></Route>
             </Routes>
           </div>
         </div>

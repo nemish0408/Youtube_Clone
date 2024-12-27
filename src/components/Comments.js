@@ -78,15 +78,15 @@ const Comments = ({ id, CommentCount }) => {
   }, [id]);
 
   return (
-    <div className="mt-4">
-      <div className="flex py-2">
+    <div className="mt-4 w-[98vw] ps-2 lg:px-0 lg:w-auto">
+      <div className="flex py-2 ">
         <h1 className="text-xl font-bold">{CommentCount} Comments</h1>
         <div className="ms-8 flex gap-2 cursor-pointer py-1 px-2 rounded-md hover:bg-[#9b9b9b]">
           <ShortLogo />
           <span className="font-semibold text-nowrap text-lg">Sort by</span>
         </div>
       </div>
-      <div>
+      <div className="">
         {commentData.length > 0 ? (
           commentData.map((comment, index) => {
             const channelId =
@@ -107,7 +107,7 @@ const Comments = ({ id, CommentCount }) => {
             const logoUrl = channelId ? channelLogos[channelId] : "";
 
             return (
-              <div key={index} className="flex py-2 gap-4">
+              <div key={index} className="flex gap-4">
                 <div className="min-w-10">
                   {/* Display Channel Logo if available */}
                   {loadingLogos ? (
@@ -123,7 +123,7 @@ const Comments = ({ id, CommentCount }) => {
                   )}
                 </div>
                 <div>
-                  <div className="flex gap-2 align-middle ">
+                  <div className="flex flex-wrap lg:gap-2 align-middle ">
                     <p className="font-semibold text-md mb-1">
                       {authorDisplayName}
                     </p>
@@ -131,7 +131,7 @@ const Comments = ({ id, CommentCount }) => {
                       {getTimeAgo(publishedAt)}
                     </p>
                   </div>
-                  <p className="text-sm mb-1 whitespace-pre-line">
+                  <p className="text-sm mb-1 whitespace-pre-line w-[49vw]">
                     {textDisplay}
                   </p>
                   <div>
@@ -157,7 +157,7 @@ const Comments = ({ id, CommentCount }) => {
                   </div>
                 </div>
                 <div className="w-full flex justify-end">
-                  <button className="px-2 py-2 flex ms-2 w-12 text-black rounded-full">
+                  <button className="px-2 py-2 flex ms-2 w-12 h-10 lg:h-12 text-black rounded-full">
                     <ThreedotsRotate />
                   </button>
                 </div>

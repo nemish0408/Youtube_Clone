@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import {
   SEARCH_API_URL,
@@ -24,21 +24,24 @@ const Head = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    data  ,
-    loading,
-    error,
-  } = useFetch(searchKey ? `${SEARCH_API_URL}${searchKey}` : null);
+  const isMenuOpen=useSelector(store=>store.app.isMenuOpen)
+
+  // setIsMenuOpen(localStorage.getItem(isMenuOpen))
+  const { data, loading, error } = useFetch(
+    searchKey ? `${SEARCH_API_URL}${searchKey}` : null
+  );
 
   const getVideos = async () => {
     if (data && Array.isArray(data) && data.length > 1) {
       setSearchSugg(data[1]);
     } else {
       setSearchSugg([]);
-    }  };
+    }
+  };
 
   const handleInputChange = (e) => {
     const text = e.target.value;
+    setIsFocused(true);
     setSearchKey(text);
 
     if (debounceTimer.current) {
@@ -51,7 +54,7 @@ const Head = () => {
       } else {
         setSearchSugg([]);
       }
-    }, 300);
+    }, 0);
   };
 
   const handleSearch = async () => {
@@ -61,9 +64,12 @@ const Head = () => {
     dispatch(setFilter(json));
     if (location.pathname.includes("/search")) {
       localStorage.setItem("searchKey", searchKey);
+    } else {
+      localStorage.setItem("searchKey", searchKey);
     }
     navigate("/search=/" + searchKey);
     setIsFocused(false);
+    setSelectedIndex(-1);
   };
 
   const handleKeyDown = (e) => {
@@ -118,20 +124,20 @@ const Head = () => {
       }
     };
   }, []);
-
   return (
     <div className="sticky top-0 z-10 bg-white shadow-md">
-      <div className="flex justify-between items-center px-4 md:px-6 py-2">
+      <div className="flex flex-wrap justify-between items-center px-4 md:px-6 py-2 order-1">
         {/* Left Section */}
         <div className="flex items-center">
           <button onClick={() => dispatch(toggleMenu())} className="p-2">
-            <img
-              src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"
+ <img
+              src={isMenuOpen?"https://img.icons8.com/?size=100&id=aJXCfqpXgZUC&format=png&color=000000":"https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"}
               alt="Menu"
               className="w-6 md:w-8"
             />
           </button>
-          <Link to="/" className="ml-4 hidden md:block">
+          {console.log(localStorage.getItem("isMenuOpen"))}
+          <Link to="/" className="ml-4 md:block">
             <img
               src="https://cdnlogo.com/logos/y/73/youtube.svg"
               alt="YouTube Logo"
@@ -141,7 +147,7 @@ const Head = () => {
         </div>
 
         {/* Search Section */}
-        <div className="flex flex-grow justify-center items-center relative search-container">
+        <div className="flex flex-grow justify-center items-center relative search-container order-3 lg:order-2">
           <div className="flex items-center w-full max-w-3xl relative">
             <input
               type="text"
@@ -186,10 +192,10 @@ const Head = () => {
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
-          <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full flex">
+        <div className="flex items-center gap-4 order-2 lg:order-3">
+          <button className="p-1.5 lg:p-2 bg-gray-100 hover:bg-gray-200 rounded-full lg:flex">
             <PlusLogo />
-            <span className="h-full text-sm flex pt-2.5 md:pt-1 align-middle">
+            <span className="h-full hidden text-sm lg:flex pt-2.5 md:pt-1 align-middle">
               Create
             </span>
           </button>
