@@ -6,7 +6,7 @@ const SidePopular = () => {
   const info = JSON.parse(localStorage.getItem("Results") || "[]");
 
   return (
-    <div className="max-w-[38vw]">
+    <div className="lg:max-w-[38vw]">
       <div className="">
         <ButtonList />
       </div>

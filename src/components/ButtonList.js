@@ -11,6 +11,7 @@ const ButtonList = () => {
   const navigate = useNavigate();
   
   const { data: json } = useFetch(CATEGORY_URL);
+// console.log(json);
 
   useEffect(() => {
     if (json?.items) {

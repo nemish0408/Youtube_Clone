@@ -26,6 +26,7 @@ const VideoPlayer = () => {
     loading: videoLoading,
     error: videoError,
   } = useFetch(videoURL);
+console.log(videoData);
 
   const [channelURL, setChannelURL] = useState("");
   const {
@@ -73,7 +74,7 @@ const VideoPlayer = () => {
   }
 
   return (
-    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 p-4 max-w-full">
+    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 lg:p-4 max-w-full">
       {/* Video Player Section */}
       <div className="md:lg:col-span-2 w-full">
         <div className="w-full aspect-w-16 aspect-h-9">
@@ -124,7 +125,7 @@ const VideoPlayer = () => {
             <div className="flex flex-wrap">
               <button className="flex text-black p-1 rounded-l-full bg-[#dbdbdb] dark:bg-[rgb(255,255,255,0.1)] dark:hover:bg-[rgb(255,255,255,0.2)] hover:bg-[#9b9b9b]">
                 <LikeLogo />
-                <span className="inline self-center font-semibold dark:text-[#f1f1f1]">{FormatNumber(details?.statistics?.viewCount)
+                <span className="inline self-center font-semibold dark:text-[#f1f1f1]">{FormatNumber(details?.statistics?.likeCount)
                 }</span>
               </button>
               <button
@@ -152,7 +153,8 @@ const VideoPlayer = () => {
           </div>
         </div>
 
-        <Comments id={id} CommentCount={commentCount} />
+        {details?.snippet?.liveBroadcastContent !=="live"&& 
+          <Comments id={id} CommentCount={commentCount} />}
       </div>
 
       <div className="w-full lg:max-w-[38vw]">

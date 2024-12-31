@@ -24,6 +24,7 @@ const PlayList = () => {
   const { id, videoId } = useParams();
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [showComments, setShowComments] = useState(false)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [commentCount, setCommentCount] = useState("");
@@ -106,9 +107,9 @@ const PlayList = () => {
   }
 
   return (
-    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 p-4 pt-0 max-w-full">
+    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 lg:p-4 pt-0 lg:max-w-[98vw] max-w-full">
       {/* Video Player Section */}
-      <div className="md:lg:col-span-2 w-full">
+      <div className="lg:col-span-2 ">
         <div className="w-full aspect-w-16 aspect-h-9">
           <iframe
             src={`https://www.youtube.com/embed/${selectedVideo.snippet.resourceId.videoId}?autoplay=1`}
@@ -190,17 +191,28 @@ const PlayList = () => {
               publishedAt={details?.snippet?.publishedAt}
               tags={details?.snippet?.tags}
             />
+            {!showComments&&<div className="w-[100vw] lg:hidden text-center pt-3">
+              <button className="text-white font-semibold dark:text-black px-5 py-2 rounded-full bg-black dark:bg-[#fff] dark:hover:bg-[#d9d9d9] hover:bg-[#000000d8] cursor-pointer lg:hidden" onClick={()=>{setShowComments(!showComments)}}>
+                Show Comments
+              </button>
+            </div>}
+            {showComments&&<Comments
+              id={selectedVideo.snippet.resourceId.videoId}
+              CommentCount={commentCount}
+            />}
+            <div className="hidden lg:block">
             <Comments
               id={selectedVideo.snippet.resourceId.videoId}
               CommentCount={commentCount}
             />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Playlist Section */}
-      <div className="lg:max-w-[38vw] ">
-        <div className=" lg:max-w-[38vw] p-4">
+      <div className="lg:max-w-[38vw] max-w-[100vw]">
+        <div className="lg:max-w-[38vw] p-4">
           <div className="dark:bg-[rgb(255,255,255,0.1)] px-2 rounded-t-lg pt-2">
             <h3 className="text-xl font-bold mb-1 truncate dark:text-[#f1f1f1]">
               {selectedVideo.snippet.title}
@@ -228,7 +240,7 @@ const PlayList = () => {
               <div className="flex justify-end hover:bg-gray-300 p-1 rounded-full dark:hover:bg-[rgb(255,255,255,0.2)]">
                 <ThreedotsRotate />
               </div>
-            </div> 
+            </div>
           </div>
           <ul className="space-y-4 bg-gray-100 dark:bg-[#0f0f0f] overflow-y-scroll h-[50vh] dark:bg">
             {videos.map((video) => (
@@ -257,7 +269,6 @@ const PlayList = () => {
                 </div>
               </li>
             ))}
-            
           </ul>
         </div>
         <div>

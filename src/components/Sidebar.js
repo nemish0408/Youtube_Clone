@@ -36,7 +36,7 @@ const Sidebar = () => {
         onClick={() => dispatch(toggleMenu())}
         className="fixed top-4 left-4 z-30 dark:text-white dark:bg-[rgba(255,255,255,0.1)]  w-10 h-10 rounded-full flex items-center justify-center shadow-lg md:hidden"
       >
-        <Close/>
+        <Close />
       </button>
 
       <div
@@ -110,7 +110,7 @@ const Sidebar = () => {
               </span>
             </Link>
             <Link
-              to="/subscriptions"
+              to="/likedvideos/"
               className="flex items-center py-3 px-4 dark:hover:bg-[rgba(255,255,255,0.2)] "
             >
               <ThumbUpOffAltOutlinedIcon className="dark:text-white" />
@@ -154,12 +154,15 @@ const Sidebar = () => {
                   Music
                 </span>
               </li>
-              <li className="flex items-center py-3 px-4 dark:hover:bg-[rgba(255,255,255,0.2)]">
+              <Link
+                to={"/livevideos"}
+                className="flex items-center py-3 px-4 dark:hover:bg-[rgba(255,255,255,0.2)]"
+              >
                 <CellTowerIcon className="dark:text-white" />
                 <span className="ml-4 text-sm md:text-base dark:text-white font-medium">
                   Live
                 </span>
-              </li>
+              </Link>
               <li className="flex items-center py-3 px-4 dark:hover:bg-[rgba(255,255,255,0.2)]">
                 <NewspaperIcon className="dark:text-white" />
                 <span className="ml-4 text-sm md:text-base dark:text-white font-medium">

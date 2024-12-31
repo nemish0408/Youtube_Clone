@@ -238,7 +238,7 @@ const Head = () => {
               </span>
             </button>
             {isCreate && (
-              <div className=" shadow-lg rounded-lg absolute dark:bg-[#212121] w-[12vw]" >
+              <div className=" shadow-lg rounded-lg absolute dark:bg-[#212121] lg:w-[12vw] w-[35vw]" >
                 <ul>
                   <Link
                     to="/"

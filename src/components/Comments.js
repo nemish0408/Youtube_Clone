@@ -27,24 +27,24 @@ const Comments = ({ id, CommentCount }) => {
     }
   };
 
-  const fetchChannelLogo = async (channelId) => {
-    if (channelLogos[channelId]) return;
+  // const fetchChannelLogo = async (channelId) => {
+  //   if (channelLogos[channelId]) return;
 
-    try {
-      const response = await fetch(
-        `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
-      );
-      const json = await response.json();
-      const logoUrl = json?.items[0]?.snippet?.thumbnails?.default?.url || "";
+  //   try {
+  //     const response = await fetch(
+  //       `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
+  //     );
+  //     const json = await response.json();
+  //     const logoUrl = json?.items[0]?.snippet?.thumbnails?.default?.url || "";
 
-      setChannelLogos((prevLogos) => ({
-        ...prevLogos,
-        [channelId]: logoUrl,
-      }));
-    } catch (error) {
-      console.error("Error fetching channel logo:", error);
-    }
-  };
+  //     setChannelLogos((prevLogos) => ({
+  //       ...prevLogos,
+  //       [channelId]: logoUrl,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error fetching channel logo:", error);
+  //   }
+  // };
 
   useEffect(() => {
     if (commentData.length > 0) {
@@ -53,7 +53,7 @@ const Comments = ({ id, CommentCount }) => {
         const channelId =
           comment?.snippet?.topLevelComment?.snippet?.authorChannelId?.value;
         if (channelId) {
-          fetchChannelLogo(channelId);
+          // fetchChannelLogo(channelId);
         }
       });
     }
@@ -131,7 +131,7 @@ const Comments = ({ id, CommentCount }) => {
                       {getTimeAgo(publishedAt)}
                     </p>
                   </div>
-                  <p className="text-sm mb-1 whitespace-pre-line w-[49vw] dark:text-[#f1f1f1]">
+                  <p className="text-sm mb-1 whitespace-pre-line overflow-auto w-[49vw] dark:text-[#f1f1f1]">
                     {textDisplay}
                   </p>
                   <div>

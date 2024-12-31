@@ -4,12 +4,13 @@ import { getTimeAgo } from "../utils/functions/getTimeAgo";
 import { FormatNumber } from "../utils/functions/formatNumber";
 import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT } from "../utils/constants";
 import useFetch from "../utils/functions/fetchURL";
+import { CellTowerOutlined } from "@mui/icons-material";
 
 const VideoCard = ({ info }) => {
   const { snippet, statistics, id, contentDetails } = info;
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
   const [channelId, setChannelId] = useState("");
-  // console.log(info);
+  console.log(info);  
 
   // const {
   //   data: json,
@@ -61,6 +62,11 @@ const VideoCard = ({ info }) => {
           {contentDetails && (
             <p className="absolute text-white bg-black text-xs px-1 py-0.5 rounded-md right-[3%] top-[87%]">
               {formatDuration(contentDetails.duration)}
+            </p>
+          )}
+          {snippet?.liveBroadcastContent==="live" && (
+            <p className="absolute text-white bg-red-600 text-xs px-1 rounded-md right-[3%] top-[87%]">
+              <CellTowerOutlined style={{width:16}}/> live
             </p>
           )}
           <img
