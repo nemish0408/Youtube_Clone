@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const LikeLogo = () => {
+  const Dark = useSelector((store) => store.app.isDark);
+  useEffect(() => {
+    const theme = Dark ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", Dark);
+    localStorage.setItem("theme", theme);
+  }, [Dark]);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -36,8 +43,8 @@ const LikeLogo = () => {
             style={{ display: "block" }}
           >
             <path
-              fill="black"
-              fillOpacity="1"
+      fill={Dark?"white":"black"}
+      fillOpacity="1"
               d="M8,11 C8,11 3,11 3,11 C3,11 3,21 3,21 C3,21 8,21 8,21 C8,21 8,11 8,11z 
               M18.770000457763672,11 C18.770000457763672,11 14.539999961853027,11 14.539999961853027,11 
               C14.539999961853027,11 16.059999465942383,6.059999942779541 16.059999465942383,6.059999942779541 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const BellLogo = () => {
+const BellLogoBlack = () => {
   const Dark = useSelector((store) => store.app.isDark);
   useEffect(() => {
     const theme = Dark ? "dark" : "light";
@@ -25,4 +25,4 @@ const BellLogo = () => {
   );
 };
 
-export default BellLogo;
+export default BellLogoBlack;

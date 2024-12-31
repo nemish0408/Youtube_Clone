@@ -25,53 +25,55 @@ const ChannelPage = () => {
   return (
     <div className="min-w-[83vw] max-w-[98vw] overflow-y-scroll scrollbar-hidden max-h-[85vh] pt-5">
       <div className="overflow-auto flex">
-          <div className="lg:px-20">
+        <div className="lg:px-20">
+          {channelDetails?.snippet?.thumbnails?.medium?.url && (
             <img
               src={channelDetails?.snippet?.thumbnails?.medium?.url}
               alt="Logo"
               className="rounded-full"
             ></img>
-          </div>
-          <div className="">
-            <h1 className="font-bold lg:text-5xl mb-2">
-              {channelDetails?.snippet?.title}
-            </h1>
-            <div className="flex">
-              <p className="font-semibold">
-                {channelDetails?.snippet?.customUrl}
-              </p>
-              <span className="ms-1 font-semibold text-gray-500">
-                • {FormatNumber(channelDetails?.statistics?.subscriberCount)}{" "}
-                subscribers
-              </span>
-              <span className="ms-1 font-semibold text-gray-500">
-                • {FormatNumber(channelDetails?.statistics?.videoCount)} videos
-              </span>
-              <span className="ms-1 font-semibold text-gray-500">
-                • {FormatNumber(channelDetails?.statistics?.viewCount)} views
-              </span>
-            </div>
-            <div className="w-[60vw]">
-              <p className="font-semibold text-gray-500 whitespace-pre-line">
-                {channelDetails?.snippet?.description}
-              </p>
-              <div className="px-5 py-2 mt-2 w-[110px] rounded-full bg-black hover:bg-[#000000d8] cursor-pointer">
-                <p className="text-white font-semibold">Subscribe</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
-        <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5 px-20">
-          {videoDetails &&
-            videoDetails.map((item, index) => {
-              return (
-                <div className="shadow-md rounded-lg w-full" key={index}>
-                  <VideoCard info={item} />
-                </div>
-              );
-            })}
+        <div className="">
+          <h1 className="font-bold lg:text-5xl mb-2 dark:text-[#f1f1f1]">
+            {channelDetails?.snippet?.title}
+          </h1>
+          <div className="flex">
+            <p className="font-semibold dark:text-[#f1f1f1]">
+              {channelDetails?.snippet?.customUrl}
+            </p>
+            <span className="ms-1 font-semibold text-gray-500 dark:text-[#aaa]">
+              • {FormatNumber(channelDetails?.statistics?.subscriberCount)}{" "}
+              subscribers
+            </span>
+            <span className="ms-1 font-semibold text-gray-500 dark:text-[#aaa]">
+              • {FormatNumber(channelDetails?.statistics?.videoCount)} videos
+            </span>
+            <span className="ms-1 font-semibold text-gray-500 dark:text-[#aaa]">
+              • {FormatNumber(channelDetails?.statistics?.viewCount)} views
+            </span>
+          </div>
+          <div className="w-[60vw]">
+            <p className="font-semibold text-gray-500 whitespace-pre-line dark:text-[#aaa]">
+              {channelDetails?.snippet?.description}
+            </p>
+            <div className="px-5 py-2 mt-2 w-[110px] rounded-full bg-black dark:bg-[#f0f0f0] dark:hover:bg-[rgb(255,255,255,0.8)] hover:bg-[#000000d8] cursor-pointer">
+              <p className="text-white font-semibold dark:text-[#0f0f0f]">Subscribe</p>
+            </div>
+          </div>
         </div>
       </div>
+      <div className="grid md:grid-cols-4 grid-cols-1 gap-5 p-5 px-20">
+        {videoDetails &&
+          videoDetails.map((item, index) => {
+            return (
+              <div className="shadow-md rounded-lg w-full" key={index}>
+                <VideoCard info={item} />
+              </div>
+            );
+          })}
+      </div>
+    </div>
   );
 };
 

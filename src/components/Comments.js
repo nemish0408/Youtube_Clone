@@ -80,10 +80,10 @@ const Comments = ({ id, CommentCount }) => {
   return (
     <div className="mt-4 w-[98vw] ps-2 lg:px-0 lg:w-auto">
       <div className="flex py-2 ">
-        <h1 className="text-xl font-bold">{CommentCount} Comments</h1>
-        <div className="ms-8 flex gap-2 cursor-pointer py-1 px-2 rounded-md hover:bg-[#9b9b9b]">
+        <h1 className="text-xl font-bold dark:text-[#f1f1f1]">{CommentCount} Comments</h1>
+        <div className="ms-8 flex gap-2 cursor-pointer py-1 px-2 rounded-md hover:bg-[#9b9b9b] dark:hover:bg-transparent">
           <ShortLogo />
-          <span className="font-semibold text-nowrap text-lg">Sort by</span>
+          <span className="font-semibold text-nowrap text-lg dark:text-[#f1f1f1] ">Sort by</span>
         </div>
       </div>
       <div className="">
@@ -124,30 +124,30 @@ const Comments = ({ id, CommentCount }) => {
                 </div>
                 <div>
                   <div className="flex flex-wrap lg:gap-2 align-middle ">
-                    <p className="font-semibold text-md mb-1">
+                    <p className="font-semibold text-md mb-1 dark:text-[#f1f1f1]">
                       {authorDisplayName}
                     </p>
-                    <p className="font-light text-sm mb-0.5 pt-1 text-nowrap">
+                    <p className="font-light text-sm mb-0.5 pt-1 text-nowrap dark:text-[#aaa] cursor-pointer dark:hover:text-[#f1f1f1]">
                       {getTimeAgo(publishedAt)}
                     </p>
                   </div>
-                  <p className="text-sm mb-1 whitespace-pre-line w-[49vw]">
+                  <p className="text-sm mb-1 whitespace-pre-line w-[49vw] dark:text-[#f1f1f1]">
                     {textDisplay}
                   </p>
                   <div>
                     <div className="flex">
-                      <button className=" flex text-black rounded-full hover:bg-[#dbdbdb]">
+                      <button className=" flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]">
                         <LikeLogo />
                       </button>
-                      <span className="inline self-center text-sm">
+                      <span className="inline self-center text-sm dark:text-[#aaa]">
                         {likeCount}
                       </span>
 
-                      <button className=" flex text-black rounded-full hover:bg-[#dbdbdb]">
-                        <LikeLogo style={{ transform: "rotate(180deg)" }} />
+                      <button style={{ transform: "rotate(180deg)" }}  className=" flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]">
+                        <LikeLogo />
                       </button>
-                      <button className="px-3 py-2 flex ms-2 text-black rounded-full hover:bg-[#dbdbdb]">
-                        <span className="ms-1.5 text-md font-medium">
+                      <button className="px-3 py-2 flex ms-2 text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgb(255,255,255,0.2)]">
+                        <span className="ms-1.5 text-sm font-medium dark:text-[#fff]">
                           {totalReplyCount
                             ? { totalReplyCount } + "replies"
                             : "Reply"}

@@ -14,11 +14,11 @@ function App() {
     <div>
       <BrowserRouter>
         <Head />
-        <div className="grid grid-flow-col w-[100vw] pt-[10px]">
+        <div className="grid grid-flow-col dark:bg-[#0f0f0f] w-[100vw] pt-[10px]">
           <div className={isMenuOpen ? "max-w-[15vw] max-h-[82vh]" : "hidden"}>
             <Sidebar />
           </div>
-          <div className="min-w-[83vw] max-w-[100 vw] w-full overflow-y-scroll overflow-x-scroll scrollbar-hidden max-h-[85vh] pt-5">
+          <div className="min-w-[83vw] max-w-[100 vw] w-full dark:bg-[#0f0f0f] overflow-y-scroll overflow-x-scroll scrollbar-hidden h-screen max-h-[88vh] pt-5">
             <Routes>
               <Route path="/" element={<Body />}></Route>
               <Route path="/videoplayer/:id" element={<VideoPlayer />}></Route>

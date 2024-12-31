@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const ShortLogo = () => {
+  const Dark = useSelector((store) => store.app.isDark);
+  useEffect(() => {
+    const theme = Dark ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", Dark);
+    localStorage.setItem("theme", theme);
+  }, [Dark]);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       enable-background="new 0 0 24 24"
       height="24"
       viewBox="0 0 24 24"
+      fill={Dark ? "white" : "black"}
       width="24"
       focusable="false"
       aria-hidden="true"

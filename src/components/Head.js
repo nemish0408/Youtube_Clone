@@ -11,12 +11,22 @@ import { setFilter } from "../utils/searchResultSlice";
 import { useLocation, useNavigate } from "react-router";
 import PlusLogo from "../svg/PlusLogo";
 import SearchLogo from "../svg/SearchLogo";
-import BellLogo from "../svg/BellLogo";
+import BellLogoBlack from "../svg/BellLogoBlack";
 import ProfileLogo from "../svg/ProfileLogo";
 import useFetch from "../utils/functions/fetchURL";
+import NotificationBox from "./NotificationBox";
+import ProfileMenu from "./ProfileMenu";
+import SmartDisplayOutlinedIcon from "@mui/icons-material/SmartDisplayOutlined";
+import CellTowerOutlinedIcon from "@mui/icons-material/CellTowerOutlined";
+import Youtubelogo from "../svg/Youtubelogo";
+import HambergLogo from "../svg/HambergLogo";
+import Close from "../svg/Close";
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isNotification, setIsNotification] = useState(false);
+  const [isProfile, setIsProfile] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
   const [searchSugg, setSearchSugg] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -24,8 +34,11 @@ const Head = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const isMenuOpen=useSelector(store=>store.app.isMenuOpen)
-
+  const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
+  const Dark = useSelector((store) => store.app.isDark);
+  const profileRef = useRef(null);
+  const notificationRef = useRef(null);
+  const createRef = useRef(null);
   // setIsMenuOpen(localStorage.getItem(isMenuOpen))
   const { data, loading, error } = useFetch(
     searchKey ? `${SEARCH_API_URL}${searchKey}` : null
@@ -90,7 +103,30 @@ const Head = () => {
       setIsFocused(false);
     }
   };
+  const handleClickOutside = (event) => {
+    if (
+      profileRef.current &&
+      !profileRef.current.contains(event.target)
+    ) {
+      setIsProfile(false);
+    }
+    if (
+      notificationRef.current &&
+      !notificationRef.current.contains(event.target)
+    ) {
+      setIsNotification(false);
+    }
+    if (createRef.current && !createRef.current.contains(event.target)) {
+      setIsCreate(false);
+    }
+  };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   useEffect(() => {
     const savedSearchKey = localStorage.getItem("searchKey");
     if (savedSearchKey) {
@@ -104,6 +140,7 @@ const Head = () => {
       setSearchKey(searchSugg[selectedIndex]);
     }
   }, [selectedIndex, searchSugg]);
+  
   useEffect(() => {
     if (location.pathname.startsWith("/search")) {
       const savedSearchKey = localStorage.getItem("searchKey");
@@ -116,7 +153,7 @@ const Head = () => {
       setSearchKey("");
     }
   }, [location.pathname]);
-
+  
   useEffect(() => {
     return () => {
       if (debounceTimer.current) {
@@ -124,25 +161,18 @@ const Head = () => {
       }
     };
   }, []);
+  
   return (
-    <div className="sticky top-0 z-10 bg-white shadow-md">
+    <div className="sticky top-0 z-10 bg-white dark:bg-[#0f0f0f] shadow-md">
       <div className="flex flex-wrap justify-between items-center px-4 md:px-6 py-2 order-1">
         {/* Left Section */}
         <div className="flex items-center">
           <button onClick={() => dispatch(toggleMenu())} className="p-2">
- <img
-              src={isMenuOpen?"https://img.icons8.com/?size=100&id=aJXCfqpXgZUC&format=png&color=000000":"https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/What%20is%20a%20Hamburger%20Button.png?width=225&name=What%20is%20a%20Hamburger%20Button.png"}
-              alt="Menu"
-              className="w-6 md:w-8"
-            />
+            {isMenuOpen?<Close/>:<HambergLogo/>}
           </button>
           {console.log(localStorage.getItem("isMenuOpen"))}
-          <Link to="/" className="ml-4 md:block">
-            <img
-              src="https://cdnlogo.com/logos/y/73/youtube.svg"
-              alt="YouTube Logo"
-              className="w-24"
-            />
+          <Link to="/" className="ml-4 flex align-middle">
+            <Youtubelogo />
           </Link>
         </div>
 
@@ -151,7 +181,7 @@ const Head = () => {
           <div className="flex items-center w-full max-w-3xl relative">
             <input
               type="text"
-              className="flex-grow border border-gray-300 rounded-l-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="flex-grow border dark:bg-[rgba(255,255,255,0.1)] dark:hover:bg-[rgba(255,255,255,0.2)] border-gray-300 rounded-l-full dark:border-gray-500 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-white dark:text-white"
               placeholder="Search"
               value={searchKey}
               onChange={handleInputChange}
@@ -160,13 +190,13 @@ const Head = () => {
               onKeyDown={handleKeyDown}
             />
             <button
-              className="border border-gray-300 rounded-r-full bg-gray-100 px-4 py-2 hover:bg-gray-200"
+              className="border border-gray-300 dark:bg-[rgba(255,255,255,0.1)] dark:hover:bg-[rgba(255,255,255,0.2)] rounded-r-full bg-gray-100 dark:border-gray-500 px-4 py-2 hover:bg-gray-200"
               onClick={() => handleSearch()}
             >
               <SearchLogo />
             </button>
             {searchSugg.length > 0 && isFocused && (
-              <div className="absolute top-full mt-2 bg-white shadow-lg w-full max-w-3xl rounded-lg z-10">
+              <div className="absolute top-full mt-2 bg-white dark:bg-[#212121] shadow-lg w-full max-w-3xl rounded-lg z-10">
                 <ul className="py-2">
                   {searchSugg.map((item, index) => (
                     <li
@@ -176,10 +206,10 @@ const Head = () => {
                         setSearchKey(item);
                         handleSearch(); // Trigger search on click
                       }}
-                      className={`px-4 py-2 cursor-pointer ${
+                      className={`px-4 py-2 cursor-pointer dark:text-white ${
                         index === selectedIndex
-                          ? "bg-gray-200"
-                          : "hover:bg-gray-100"
+                          ? "bg-gray-200 dark:bg-[rgb(255,255,255,0.2)]"
+                          : "hover:bg-gray-100 dark:hover:bg-[rgb(255,255,255,0.1)] "
                       }`}
                     >
                       {item}
@@ -193,18 +223,79 @@ const Head = () => {
 
         {/* Right Section */}
         <div className="flex items-center gap-4 order-2 lg:order-3">
-          <button className="p-1.5 lg:p-2 bg-gray-100 hover:bg-gray-200 rounded-full lg:flex">
-            <PlusLogo />
-            <span className="h-full hidden text-sm lg:flex pt-2.5 md:pt-1 align-middle">
-              Create
-            </span>
-          </button>
-          <button className="p-2 hover:bg-gray-200 bg-gray-100 rounded-full">
-            <BellLogo />
-          </button>
-          <button className="p-2 hover:bg-gray-200 bg-gray-100 rounded-full">
-            <ProfileLogo />
-          </button>
+          <div className="relative" ref={createRef}>
+            <button
+              className="p-1.5 lg:p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.1)] dark:hover:bg-[rgba(255,255,255,0.2)] hover:bg-gray-200 rounded-full lg:flex"
+              onClick={() => {
+                setIsCreate(!isCreate);
+                setIsProfile(false);
+                setIsNotification(false);
+              }}
+            >
+              <PlusLogo />
+              <span className="h-full hidden text-sm dark:text-white lg:flex pt-2.5 md:pt-1 align-middle">
+                Create
+              </span>
+            </button>
+            {isCreate && (
+              <div className=" shadow-lg rounded-lg absolute dark:bg-[#212121] w-[12vw]" >
+                <ul>
+                  <Link
+                    to="/"
+                    className="flex items-center py-3 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[rgba(255,255,255,0.2)]"
+                  >
+                    <SmartDisplayOutlinedIcon className="text-gray-700 dark:text-white" />
+                    <span className="text-sm ms-2 md:text-base dark:text-white font-semibold">
+                      upload video
+                    </span>
+                  </Link>
+                  <Link
+                    to="/"
+                    className="flex items-center rounded-lg py-3 px-2 dark:text-white hover:bg-gray-100 dark:hover:bg-[rgba(255,255,255,0.2)]"
+                  >
+                    <CellTowerOutlinedIcon className="text-gray-700 dark:text-white" />
+                    <span className="text-sm ms-2 md:text-base font-semibold">
+                      Go live{" "}
+                    </span>
+                  </Link>
+                </ul>
+              </div>
+            )}
+          </div>
+          <div className="relative" ref={notificationRef}>
+            <button
+              className="p-2 h-10 w-10 hover:bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] dark:hover:bg-[rgba(255,255,255,0.2)] bg-gray-100 rounded-full"
+              onClick={() => {
+                setIsNotification(!isNotification);
+                setIsProfile(false);
+                setIsCreate(false);
+              }}
+            >
+              <BellLogoBlack />
+            </button>
+            {isNotification && (
+              <div className="absolute bg-white dark:bg-[#0f0f0f] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen lg:min-w-[30vw] top-10">
+                <NotificationBox dark={Dark}/>
+              </div>
+            )}
+          </div>
+          <div className="relative" ref={profileRef}>
+            <button
+              className="p-2 h-10 w-10 dark:bg-[rgba(255,255,255,0.1)] dark:hover:bg-[rgba(255,255,255,0.2)] hover:bg-gray-200 bg-gray-100 rounded-full"
+              onClick={() => {
+                setIsProfile(!isProfile);
+                setIsNotification(false);
+                setIsCreate(false);
+              }}
+            >
+              <ProfileLogo />
+            </button>
+            {isProfile && (
+              <div className="absolute bg-white dark:bg-[#212121] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen min-w-[90vw] lg:min-w-[30vw] top-10">
+                <ProfileMenu />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

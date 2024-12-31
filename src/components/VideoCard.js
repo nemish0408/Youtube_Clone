@@ -22,6 +22,17 @@ const VideoCard = ({ info }) => {
       setChannelId(snippet.channelId);
     }
   }, [snippet.channelId]);
+  const formatDuration = (duration) => {
+    // Remove the "PT" prefix
+    const time = duration.replace("PT", "");
+
+    // Extract minutes and seconds
+    const minutes = time.match(/(\d+)M/)?.[1] || "0";
+    const seconds = time.match(/(\d+)S/)?.[1] || "0";
+
+    // Return formatted duration as "MM:SS"
+    return `${minutes}:${seconds.padStart(2, "0")}`;
+  };
 
   // useEffect(() => {
   //   if (json && json.items && json.items[0]) {
@@ -48,14 +59,14 @@ const VideoCard = ({ info }) => {
       <div className="w-full relative overflow-hidden">
         <div className="w-full relative rounded-lg hover:rounded-none hover:scale-[1.01]">
           {contentDetails && (
-            <p className="absolute text-white bg-black text-xs px-0.5 rounded-md right-[3%] top-[87%]">
-              {contentDetails.duration.slice(2)}
+            <p className="absolute text-white bg-black text-xs px-1 py-0.5 rounded-md right-[3%] top-[87%]">
+              {formatDuration(contentDetails.duration)}
             </p>
           )}
           <img
             alt="thumbnail"
             src={snippet.thumbnails.medium.url}
-            className="w-full rounded-lg hover:rounded-none hover:scale-[1.01]"
+            className="w-full rounded-lg hover:scale-[1.01]"
           ></img>
         </div>
         <div className="px-4 py-2">
@@ -65,19 +76,21 @@ const VideoCard = ({ info }) => {
             ) : error ? (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
             ) : channelLogoUrl ? (
-              <img
-                className="w-10 h-10 rounded-full"
-                src={channelLogoUrl}
-                alt="Channel Logo"
-              />
+              <Link to={`/channel/${id.channelId}`}>
+                <img
+                  className="w-12 h-10 rounded-full object-cover"
+                  src={channelLogoUrl}
+                  alt="Channel Logo"
+                />
+              </Link>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
             )} */}
             <div className="w-full">
-              <p className="font-semibold text-sm text-gray-800 w-full line-clamp-2">
+              <p className="font-semibold text-sm text-gray-800 dark:text-white w-full line-clamp-2">
                 {snippet.title}
               </p>
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-[#f1f1f1] mt-1">
                 <p>{snippet.channelTitle}</p>
               </div>
               <p className="text-xs text-gray-500 mt-1">

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import {
   CHANNEL_LOGO_URL,
   CHANNEL_LOGO_URL_EXT,
@@ -73,9 +73,10 @@ const VideoPlayer = () => {
   }
 
   return (
-    <div className="grid md:grid-flow-col lg:w-[100vw] md:grid-cols-3 gap-4 lg:p-4 max-w-full">
-      <div className="col-span-3 lg:col-span-2">
-        <div className="relative w-full aspect-w-16 aspect-h-9">
+    <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 p-4 max-w-full">
+      {/* Video Player Section */}
+      <div className="md:lg:col-span-2 w-full">
+        <div className="w-full aspect-w-16 aspect-h-9">
           <iframe
             src={`https://www.youtube.com/embed/${id}?autoplay=1`}
             title={details.snippet?.title || "YouTube Video"}
@@ -88,49 +89,55 @@ const VideoPlayer = () => {
         </div>
 
         <div>
-          <h1 className="pt-4 text-xl font-bold">{details.snippet?.title}</h1>
-          <div className="flex flex-wrap items-center gap-4 pt-2 justify-center">
+          <h1 className="pt-4 text-xl font-bold dark:text-[#f1f1f1]">{details.snippet?.title}</h1>
+          <div className="flex flex-wrap items-center gap-4 pt-2  lg:justify-between justify-center">
             <div className="flex gap-2">
+              <Link to={`/channel/${videoData?.items[0]?.snippet.channelId}`}>
               {channelLogoUrl && (
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src={channelLogoUrl}
-                  alt="Channel Logo"
-                />
-              )}
+                  <img
+                    className="w-10 h-10 rounded-full"
+                    src={channelLogoUrl}
+                    alt="Channel Logo"
+                  />
+                )}
+                </Link>
               <div>
-                <span className="font-semibold block">
+                <span className="font-semibold block dark:text-[#f1f1f1]">
                   {details.snippet?.channelTitle}
                 </span>
                 {subscriberCount && (
-                  <span className="text-gray-500 text-sm block">
+                  <span className="text-gray-500 dark:text-[#aaa] text-sm block">
                     {subscriberCount} subscribers
                   </span>
                 )}
               </div>
               <div className="grid grid-flow-col gap-2 align-middle">
-                <div className="px-5 py-2 ms-2 rounded-full bg-[#dbdbdb] hover:bg-[#9b9b9b] cursor-pointer">
-                  <p className="text-black font-semibold">Join</p>
+                <div className="px-5 py-2 ms-2 rounded-full bg-[#dbdbdb] dark:bg-[rgb(255,255,255,0.1)] dark:hover:bg-[rgb(255,255,255,0.2)] hover:bg-[#9b9b9b] cursor-pointer">
+                  <p className="text-black dark:text-[#f1f1f1] font-semibold">Join</p>
                 </div>
-                <div className="px-5 py-2 rounded-full bg-black hover:bg-[#000000d8] cursor-pointer">
-                  <p className="text-white font-semibold">Subscribe</p>
+                <div className="px-5 py-2 rounded-full bg-black dark:bg-[#fff] dark:hover:bg-[#d9d9d9] hover:bg-[#000000d8] cursor-pointer">
+                  <p className="text-white font-semibold dark:text-black ">Subscribe</p>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-wrap">
-              <button className="flex text-black p-1 rounded-l-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
+              <button className="flex text-black p-1 rounded-l-full bg-[#dbdbdb] dark:bg-[rgb(255,255,255,0.1)] dark:hover:bg-[rgb(255,255,255,0.2)] hover:bg-[#9b9b9b]">
                 <LikeLogo />
-                <span className="inline self-center font-semibold">Like</span>
+                <span className="inline self-center font-semibold dark:text-[#f1f1f1]">{FormatNumber(details?.statistics?.viewCount)
+                }</span>
               </button>
-              <button style={{ transform: "rotate(180deg)" }} className="flex text-black rounded-l-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
-                <LikeLogo  />
+              <button
+                style={{ transform: "rotate(180deg)" }}
+                className="flex text-black rounded-l-full bg-[#dbdbdb] dark:bg-[rgb(255,255,255,0.1)] dark:hover:bg-[rgb(255,255,255,0.2)] hover:bg-[#9b9b9b]"
+              >
+                <LikeLogo />
               </button>
-              <button className="px-3 py-2 flex ms-2 text-black rounded-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
+              <button className="px-3 py-2 flex ms-2 text-black rounded-full bg-[#dbdbdb] dark:bg-[rgb(255,255,255,0.1)] dark:hover:bg-[rgb(255,255,255,0.2)] hover:bg-[#9b9b9b]">
                 <ShareLogo />
-                <span className="ms-1.5 font-semibold block">Share</span>
+                <span className="ms-1.5 pt-1 font-semibold block dark:text-[#f1f1f1]">Share</span>
               </button>
-              <button className="px-2 py-2 flex ms-2 text-black rounded-full bg-[#dbdbdb] hover:bg-[#9b9b9b]">
+              <button className="px-2 py-2 flex ms-2 text-black rounded-full bg-[#dbdbdb] dark:bg-[rgb(255,255,255,0.1)] dark:hover:bg-[rgb(255,255,255,0.2)] hover:bg-[#9b9b9b]">
                 <ThreeDots />
               </button>
             </div>

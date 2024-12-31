@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const SearchLogo = () => {
+const Close = () => {
   const Dark = useSelector((store) => store.app.isDark);
   useEffect(() => {
     const theme = Dark ? "dark" : "light";
@@ -11,19 +11,16 @@ const SearchLogo = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="w-5 h-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke={Dark ? "white" : "black"}
+      x="0px"
+      y="0px"
+      width="28"
+      height="28"
+      viewBox="0 0 50 50"
+      fill={Dark ? "white" : "black"}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M8 16a6 6 0 100-12 6 6 0 000 12zm8 0l4 4"
-      />
+      <path d="M 9.15625 6.3125 L 6.3125 9.15625 L 22.15625 25 L 6.21875 40.96875 L 9.03125 43.78125 L 25 27.84375 L 40.9375 43.78125 L 43.78125 40.9375 L 27.84375 25 L 43.6875 9.15625 L 40.84375 6.3125 L 25 22.15625 Z"></path>
     </svg>
   );
 };
 
-export default SearchLogo;
+export default Close;

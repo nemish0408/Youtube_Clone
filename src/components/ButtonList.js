@@ -71,15 +71,15 @@ const ButtonList = () => {
       {/* Scroll Buttons */}
       {canScrollLeft && (
         <button
-          className="absolute left-0 z-10 lg:bg-gradient-to-r lg:from-gray-900 lg:to-transparent lg:text-white px-2 py-2 rounded-full lg:focus:outline-none lg:hover:bg-gray-800"
+          className="absolute left-0 z-10 lg:bg-gradient-to-r lg:from-gray-900 lg:to-transparent lg:text-white px-2 py-2 rounded-full lg:focus:outline-none lg:hover:bg-gray-800 dark:bg-[#0f0f0f]"
           onClick={scrollLeft}
         >
-          <span className="material-icons pt-1">chevron_left</span>
+          <span className="material-icons pt-1 dark:text-white">chevron_left</span>
         </button>
       )}
       {canScrollRight && (
         <button
-          className="absolute right-0 z-10 lg:bg-gradient-to-l lg:from-gray-900 lg:to-transparent lg:text-white px-2 py-2 rounded-full lg:focus:outline-none lg:hover:bg-gray-800"
+          className="absolute right-0 z-10 lg:bg-gradient-to-l lg:from-gray-900 lg:to-transparent lg:text-white px-2 py-2 rounded-full lg:focus:outline-none lg:hover:bg-gray-800 dark:bg-[#0f0f0f]  dark:text-white"
           onClick={scrollRight}
         >
           <span className="material-icons pt-1">chevron_right</span>
@@ -96,7 +96,7 @@ const ButtonList = () => {
             <li
               key={index}
               onClick={() => handleCategoryClick(label?.snippet?.title)} // Handle category click
-              className="text-sm text-gray-900 bg-gray-200 hover:bg-gray-300 inline-block whitespace-nowrap px-4 py-2 rounded-full cursor-pointer"
+              className="text-sm text-gray-900 bg-gray-200 dark:bg-[rgba(255,255,255,0.2)] dark:hover:bg-[rgba(255,255,255,0.3)] hover:bg-gray-300 inline-block whitespace-nowrap dark:text-white px-4 py-2 rounded-full cursor-pointer"
             >
               {label?.snippet?.title}
             </li>

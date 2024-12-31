@@ -54,7 +54,7 @@ const SearchVideoCard = () => {
 
   return (
     <div className="min-w-[83vw] max-w-[98vw] overflow-y-scroll scrollbar-hidden max-h-[85vh] pt-5">
-      <div className="grid grid-cols-1 gap-5 p-5">
+      <div className="grid grid-cols-1 gap-5 p-5 min-h-screen">
         {filtered?.items?.length > 0 ? (
           filtered?.items?.map((item, index) => (
             <div className="shadow-md lg:shadow-none lg:hover:shadow-md  rounded-lg w-full max-h-full" key={index}>
@@ -62,7 +62,8 @@ const SearchVideoCard = () => {
             </div>
           ))
         ) : (
-          <div>No videos found.</div>
+          <div className="min-h-screen dark:text-[#f1f1f1] dark:bg-[#0f0f0f]"><p className="dark:text-[#f1f1f1] text-4xl">
+            No videos found.</p></div>
         )}
       </div>
     </div>

@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const ProfileLogo = () => {
+  const Dark = useSelector((store) => store.app.isDark);
+  useEffect(() => {
+    const theme = Dark ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", Dark);
+    localStorage.setItem("theme", theme);
+  }, [Dark]);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className="h-6 w-6 text-black-600"
-      fill="black"
+      fill={Dark ? "white" : "black"}
       viewBox="0 0 18 18"
-      stroke="currentColor"
+      stroke={Dark ? "white" : "black"}
     >
       <path
         xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const SearchLogo = () => {
+const HambergLogo = () => {
   const Dark = useSelector((store) => store.app.isDark);
   useEffect(() => {
     const theme = Dark ? "dark" : "light";
@@ -11,19 +11,16 @@ const SearchLogo = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="w-5 h-5"
-      fill="none"
+      width="28"
+      height="28"
       viewBox="0 0 24 24"
-      stroke={Dark ? "white" : "black"}
+      fill={Dark ? "white" : "black"}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M8 16a6 6 0 100-12 6 6 0 000 12zm8 0l4 4"
-      />
+      <path d="M5 6.5H19V8H5V6.5Z" />
+      <path d="M5 16.5H19V18H5V16.5Z" />
+      <path d="M5 11.5H19V13H5V11.5Z" />
     </svg>
   );
 };
 
-export default SearchLogo;
+export default HambergLogo;

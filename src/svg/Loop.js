@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Loop = () => {
+  const Dark = useSelector((store) => store.app.isDark);
+  useEffect(() => {
+    const theme = Dark ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", Dark);
+    localStorage.setItem("theme", theme);
+  }, [Dark]);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +15,7 @@ const Loop = () => {
       height="24"
       width="24"
       focusable="false"
+      fill={Dark?"white":"black"}
       aria-hidden="true"
       style={{
         pointerEvents: "none",

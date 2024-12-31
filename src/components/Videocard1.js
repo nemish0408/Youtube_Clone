@@ -47,7 +47,11 @@ const VideoCard1 = ({ info }) => {
             <img
               alt="thumbnail"
               src={snippet.thumbnails.medium.url}
-              className= {id?.channelId ? " hover:rounded-none object-fill mx-auto h-[175px] rounded-full hover:rounded-full" : "rounded-lg hover:rounded-none object-fill h-[175px] "}
+              className={
+                id?.channelId
+                  ? " object-fill mx-auto h-[175px] rounded-full"
+                  : "rounded-lg object-fill h-[175px] "
+              }
             />
           </div>
           <div className="px-4 py-2">
@@ -57,23 +61,25 @@ const VideoCard1 = ({ info }) => {
               ) : error ? (
                 <div className="w-10 h-10 rounded-full bg-gray-300" />
               ) : channelLogoUrl ? (
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src={channelLogoUrl}
-                  alt="Channel Logo"
-                />
+                <Link to={`/channel/${id.channelId}`}>
+                  <img
+                    className="w-10 h-10 rounded-full"
+                    src={channelLogoUrl}
+                    alt="Channel Logo"
+                  />
+                </Link>
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gray-300" />
               )} */}
               <div className="w-full">
-                <p className="font-semibold text-lg text-gray-800 w-full line-clamp-2">
+                <p className="font-semibold text-lg text-gray-800 dark:text-[#f1f1f1] w-full line-clamp-2">
                   {snippet.title}
                 </p>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-[#aaa] mt-1">
                   <p>{snippet.channelTitle}</p>
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mt-1 dark:text-[#aaa]">
                     {getTimeAgo(snippet.publishedAt)} •{" "}
                     <span className="font-semibold">
                       {id.videoId ? "Video" : ""}
