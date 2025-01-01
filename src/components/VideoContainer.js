@@ -11,7 +11,7 @@ const VideoContainer = () => {
   const [menu,setmenu] = useState('')
   const dispatch = useDispatch();
   const isMenu =useSelector((store) => store.app.isMenuOpen);
-  const { data: json, loading, error } = useFetch(YOUTUBE_VIDEO_URL);
+  const { data: json } = useFetch(YOUTUBE_VIDEO_URL);
   const getVideos = () => {
     setVideos(json?.items);
     console.log(json);

@@ -1,8 +1,7 @@
-import { useScrollTrigger } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useFetch from "../utils/functions/fetchURL";
 import { LIVE_VIDEO_URL } from "../utils/constants";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import VideoCard from "./VideoCard";
 
 const LiveVideos = () => {

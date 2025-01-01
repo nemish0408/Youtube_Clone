@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom"; // Correct import for Link
 import { getTimeAgo } from "../utils/functions/getTimeAgo";
 import { FormatNumber } from "../utils/functions/formatNumber";
 
-const   VertVideoCard = ({ info }) => {
+const   VertVideoCard = memo(({ info }) => {
   const { snippet, statistics, id } = info;
 
   return (
@@ -36,6 +36,6 @@ const   VertVideoCard = ({ info }) => {
       </div>
     </Link>
   );
-};
+});
 
 export default VertVideoCard;

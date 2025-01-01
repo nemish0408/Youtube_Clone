@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 
-const VideoDescription = ({ description, viewCount, publishedAt, tags }) => {
+const VideoDescription = memo(({ description, viewCount, publishedAt, tags }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   const toggleDescription = () => {
@@ -55,6 +55,6 @@ const VideoDescription = ({ description, viewCount, publishedAt, tags }) => {
       </p>
     </div>
   );
-};
+})
 
 export default VideoDescription;

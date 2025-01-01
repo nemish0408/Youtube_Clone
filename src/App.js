@@ -9,6 +9,7 @@ import PlayList from "./components/PlayList";
 import ChannelPage from "./components/ChannelPage";
 import LiveVideos from "./components/LiveVideos";
 import LikedVideos from "./components/LikedVideos";
+import WatchPage from "./components/WatchPage";
 
 function App() {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
@@ -29,6 +30,8 @@ function App() {
               <Route path={"/channel/:id"} element={<ChannelPage />}></Route>
               <Route path={"/livevideos/"} element={<LiveVideos />}></Route>
               <Route path={"/likedvideos/"} element={<LikedVideos />}></Route>
+              <Route path={"/watch/:id"} element={<WatchPage />}></Route>
+              
             </Routes>
           </div>
         </div>

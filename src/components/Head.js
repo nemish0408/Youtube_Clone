@@ -14,13 +14,16 @@ import SearchLogo from "../svg/SearchLogo";
 import BellLogoBlack from "../svg/BellLogoBlack";
 import ProfileLogo from "../svg/ProfileLogo";
 import useFetch from "../utils/functions/fetchURL";
-import NotificationBox from "./NotificationBox";
-import ProfileMenu from "./ProfileMenu";
+// import NotificationBox from "./NotificationBox";
+// import ProfileMenu from "./ProfileMenu";
 import SmartDisplayOutlinedIcon from "@mui/icons-material/SmartDisplayOutlined";
 import CellTowerOutlinedIcon from "@mui/icons-material/CellTowerOutlined";
 import Youtubelogo from "../svg/Youtubelogo";
 import HambergLogo from "../svg/HambergLogo";
 import Close from "../svg/Close";
+
+const NotificationBox = React.lazy(() => import("./NotificationBox"));
+const ProfileMenu = React.lazy(() => import("./ProfileMenu"));
 
 const Head = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -35,11 +38,9 @@ const Head = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-  const Dark = useSelector((store) => store.app.isDark);
   const profileRef = useRef(null);
   const notificationRef = useRef(null);
   const createRef = useRef(null);
-  // setIsMenuOpen(localStorage.getItem(isMenuOpen))
   const { data, loading, error } = useFetch(
     searchKey ? `${SEARCH_API_URL}${searchKey}` : null
   );
@@ -238,7 +239,7 @@ const Head = () => {
               </span>
             </button>
             {isCreate && (
-              <div className=" shadow-lg rounded-lg absolute dark:bg-[#212121] lg:w-[12vw] w-[35vw]" >
+              <div className=" shadow-lg rounded-lg absolute bg-white dark:bg-[#212121] lg:w-[12vw] w-[35vw]" >
                 <ul>
                   <Link
                     to="/"
@@ -275,7 +276,7 @@ const Head = () => {
             </button>
             {isNotification && (
               <div className="absolute bg-white dark:bg-[#0f0f0f] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen lg:min-w-[30vw] top-10">
-                <NotificationBox dark={Dark}/>
+                <NotificationBox/>
               </div>
             )}
           </div>

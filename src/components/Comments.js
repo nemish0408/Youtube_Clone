@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   CHANNEL_LOGO_URL,
   CHANNEL_LOGO_URL_EXT,
@@ -10,7 +10,7 @@ import ThreedotsRotate from "../svg/ThreedotsRotate";
 import ShortLogo from "../svg/ShortLogo";
 import LikeLogo from "../svg/LikeLogo";
 
-const Comments = ({ id, CommentCount }) => {
+const Comments = memo(({ id, CommentCount }) => {
   const [commentData, setCommentData] = useState([]);
   const [channelLogos, setChannelLogos] = useState({});
   const [loadingLogos, setLoadingLogos] = useState(true);
@@ -170,6 +170,6 @@ const Comments = ({ id, CommentCount }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Comments;

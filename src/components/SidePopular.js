@@ -1,8 +1,7 @@
-import React from "react";
+import React, { lazy, memo } from "react";
 import ButtonList from "./ButtonList";
-import VertVideoCard from "./VertVideoCard";
-
-const SidePopular = () => {
+const VertVideoCard = lazy(()=>import("./VertVideoCard"))
+const SidePopular = memo(() => {
   const info = JSON.parse(localStorage.getItem("Results") || "[]");
 
   return (
@@ -19,6 +18,6 @@ const SidePopular = () => {
       })}
     </div>
   );
-};
+});
 
 export default SidePopular;
