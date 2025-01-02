@@ -10,13 +10,13 @@ const VideoCard = ({ info }) => {
   const { snippet, statistics, id, contentDetails } = info;
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
   const [channelId, setChannelId] = useState("");
-  console.log(info);  
+  console.log(info);
 
-  // const {
-  //   data: json,
-  //   loading,
-  //   error,
-  // } = useFetch(`${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`);
+  const {
+    data: json,
+    loading,
+    error,
+  } = useFetch(`${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`);
 
   useEffect(() => {
     if (snippet.channelId) {
@@ -35,12 +35,12 @@ const VideoCard = ({ info }) => {
     return `${minutes}:${seconds.padStart(2, "0")}`;
   };
 
-  // useEffect(() => {
-  //   if (json && json.items && json.items[0]) {
-  //     const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
-  //     setChannelLogoUrl(logoUrl);
-  //   }
-  // }, [json]);
+  useEffect(() => {
+    if (json && json.items && json.items[0]) {
+      const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
+      setChannelLogoUrl(logoUrl);
+    }
+  }, [json]);
 
   return (
     <Link
@@ -64,9 +64,9 @@ const VideoCard = ({ info }) => {
               {formatDuration(contentDetails.duration)}
             </p>
           )}
-          {snippet?.liveBroadcastContent==="live" && (
+          {snippet?.liveBroadcastContent === "live" && (
             <p className="absolute text-white bg-red-600 text-xs px-1 rounded-md right-[3%] top-[87%]">
-              <CellTowerOutlined style={{width:16}}/> live
+              <CellTowerOutlined style={{ width: 16 }} /> live
             </p>
           )}
           <img
@@ -74,10 +74,11 @@ const VideoCard = ({ info }) => {
             src={snippet.thumbnails.medium.url}
             className="w-full rounded-lg hover:scale-[1.01]"
           ></img>
+          
         </div>
         <div className="px-4 py-2">
           <div className="flex items-top space-x-2">
-            {/* {loading ? (
+            {loading ? (
               <div className="w-10 h-10 rounded-full bg-gray-200" />
             ) : error ? (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
@@ -91,7 +92,7 @@ const VideoCard = ({ info }) => {
               </Link>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
-            )} */}
+            )}
             <div className="w-full">
               <p className="font-semibold text-sm text-gray-800 dark:text-white w-full line-clamp-2">
                 {snippet.title}

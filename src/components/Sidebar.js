@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toggleMenu } from "../utils/appSlice";
@@ -25,10 +25,12 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import Close from "../svg/Close";
+import Modal from "./FeedbackModal";
 
 const Sidebar = () => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const dispatch = useDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
@@ -38,7 +40,7 @@ const Sidebar = () => {
       >
         <Close />
       </button>
-
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <div
         className={`fixed top-0 left-0 h-full bg-white dark:bg-[#0f0f0f]  shadow-lg overflow-y-auto scrollbar-hidden z-20 transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
@@ -224,7 +226,7 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                to="/subscriptions"
+                onClick={() => setIsModalOpen(true)}
                 className="flex items-center py-3 px-4 dark:hover:bg-[rgba(255,255,255,0.2)]"
               >
                 <FeedbackOutlinedIcon className="dark:text-white" />

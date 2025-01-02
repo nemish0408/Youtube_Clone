@@ -22,29 +22,30 @@ const Comments = memo(({ id, CommentCount }) => {
       const response = await fetch(url);
       const json = await response.json();
       setCommentData(json?.items);
+      console.log(json?.items);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
   };
 
-  // const fetchChannelLogo = async (channelId) => {
-  //   if (channelLogos[channelId]) return;
+  const fetchChannelLogo = async (channelId) => {
+    if (channelLogos[channelId]) return;
 
-  //   try {
-  //     const response = await fetch(
-  //       `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
-  //     );
-  //     const json = await response.json();
-  //     const logoUrl = json?.items[0]?.snippet?.thumbnails?.default?.url || "";
+    try {
+      const response = await fetch(
+        `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
+      );
+      const json = await response.json();
+      const logoUrl = json?.items[0]?.snippet?.thumbnails?.default?.url || "";
 
-  //     setChannelLogos((prevLogos) => ({
-  //       ...prevLogos,
-  //       [channelId]: logoUrl,
-  //     }));
-  //   } catch (error) {
-  //     console.error("Error fetching channel logo:", error);
-  //   }
-  // };
+      setChannelLogos((prevLogos) => ({
+        ...prevLogos,
+        [channelId]: logoUrl,
+      }));
+    } catch (error) {
+      console.error("Error fetching channel logo:", error);
+    }
+  };
 
   useEffect(() => {
     if (commentData.length > 0) {
@@ -80,10 +81,14 @@ const Comments = memo(({ id, CommentCount }) => {
   return (
     <div className="mt-4 w-[98vw] ps-2 lg:px-0 lg:w-auto">
       <div className="flex py-2 ">
-        <h1 className="text-xl font-bold dark:text-[#f1f1f1]">{CommentCount} Comments</h1>
+        <h1 className="text-xl font-bold dark:text-[#f1f1f1]">
+          {CommentCount} Comments
+        </h1>
         <div className="ms-8 flex gap-2 cursor-pointer py-1 px-2 rounded-md hover:bg-[#9b9b9b] dark:hover:bg-transparent">
           <ShortLogo />
-          <span className="font-semibold text-nowrap text-lg dark:text-[#f1f1f1] ">Sort by</span>
+          <span className="font-semibold text-nowrap text-lg dark:text-[#f1f1f1] ">
+            Sort by
+          </span>
         </div>
       </div>
       <div className="">
@@ -102,7 +107,7 @@ const Comments = memo(({ id, CommentCount }) => {
               comment?.snippet?.topLevelComment?.snippet?.publishedAt;
             const totalReplyCount =
               comment?.snippet?.topLevelComment?.totalReplyCount;
-
+            fetchChannelLogo(channelId);
             // Get the channel logo for the comment
             const logoUrl = channelId ? channelLogos[channelId] : "";
 
@@ -143,7 +148,10 @@ const Comments = memo(({ id, CommentCount }) => {
                         {likeCount}
                       </span>
 
-                      <button style={{ transform: "rotate(180deg)" }}  className=" flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]">
+                      <button
+                        style={{ transform: "rotate(180deg)" }}
+                        className=" flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]"
+                      >
                         <LikeLogo />
                       </button>
                       <button className="px-3 py-2 flex ms-2 text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgb(255,255,255,0.2)]">

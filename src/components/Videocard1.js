@@ -9,22 +9,22 @@ const VideoCard1 = ({ info }) => {
   const idext = id?.videoId || id?.playlistId || id?.channelId;
 
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
-  // const {
-  //   data: json,
-  //   loading,
-  //   error,
-  // } = useFetch(
-  //   snippet?.channelId
-  //     ? `${CHANNEL_LOGO_URL}${snippet.channelId}${CHANNEL_LOGO_URL_EXT}`
-  //     : null
-  // );
+  const {
+    data: json,
+    loading,
+    error,
+  } = useFetch(
+    snippet?.channelId
+      ? `${CHANNEL_LOGO_URL}${snippet.channelId}${CHANNEL_LOGO_URL_EXT}`
+      : null
+  );
 
-  // useEffect(() => {
-  //   if (json && json.items && json.items[0]) {
-  //     const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
-  //     setChannelLogoUrl(logoUrl);
-  //   }
-  // }, [json]); // This runs when json changes
+  useEffect(() => {
+    if (json && json.items && json.items[0]) {
+      const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
+      setChannelLogoUrl(logoUrl);
+    }
+  }, [json]); // This runs when json changes
 
   if (!idext) return null; // Return null if no valid id is found
 
@@ -56,7 +56,7 @@ const VideoCard1 = ({ info }) => {
           </div>
           <div className="px-4 py-2">
             <div className="flex items-top space-x-2">
-              {/* {loading ? (
+              {loading ? (
                 <div className="w-10 h-10 rounded-full bg-gray-200" />
               ) : error ? (
                 <div className="w-10 h-10 rounded-full bg-gray-300" />
@@ -70,7 +70,7 @@ const VideoCard1 = ({ info }) => {
                 </Link>
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gray-300" />
-              )} */}
+              )}
               <div className="w-full">
                 <p className="font-semibold text-lg text-gray-800 dark:text-[#f1f1f1] w-full line-clamp-2">
                   {snippet.title}
