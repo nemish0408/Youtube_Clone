@@ -21,7 +21,7 @@ function App() {
           <div className={isMenuOpen ? "max-w-[15vw] max-h-[82vh]" : "hidden"}>
             <Sidebar />
           </div>
-          <div className="min-w-[83vw] max-w-[100vw] lg:max-w-[98vw] w-full dark:bg-[#0f0f0f] overflow-y-scroll overflow-x-scroll scrollbar-hidden min-h-[88.6vh] pt-5">
+          <div className="min-w-[83vw] max-w-[100vw] lg:max-w-[98vw] w-full dark:bg-[#0f0f0f] overflow-y-scroll overflow-x-scroll scrollbar-hidden min-h-[88.6vh] lg:pt-5">
             <Routes>
               <Route path="/" element={<Body />}></Route>
               <Route path="/videoplayer/:id" element={<VideoPlayer />}></Route>

@@ -179,7 +179,7 @@ const Head = () => {
 
         {/* Search Section */}
         <div className="flex flex-grow justify-center items-center relative search-container order-3 lg:order-2">
-          <div className="flex items-center w-full max-w-3xl relative">
+          <div className="flex items-center w-full max-w-3xl relative lg:mt-0 mt-2">
             <input
               type="text"
               className="flex-grow border dark:bg-[rgba(255,255,255,0.1)] dark:hover:bg-[rgba(255,255,255,0.2)] border-gray-300 rounded-l-full dark:border-gray-500 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-white dark:text-white"

@@ -4,7 +4,7 @@ import VideoContainer from "./VideoContainer";
 
 const MainContainer = () => {
   return (
-    <div className="overflow-y-scroll scrollbar-hidden max-h-[85vh] pt-5">
+    <div className="overflow-y-scroll scrollbar-hidden max-h-[85vh] lg:pt-5">
       <ButtonList className="sticky top-0"/>
       <VideoContainer />
     </div>
