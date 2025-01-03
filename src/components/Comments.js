@@ -9,11 +9,14 @@ import { getTimeAgo } from "../utils/functions/getTimeAgo";
 import ThreedotsRotate from "../svg/ThreedotsRotate";
 import ShortLogo from "../svg/ShortLogo";
 import LikeLogo from "../svg/LikeLogo";
+import { Virtuoso } from "react-virtuoso";
+
+// Cache for channel logos
+const channelLogoCache = new Map();
 
 const Comments = memo(({ id, CommentCount }) => {
   const [commentData, setCommentData] = useState([]);
   const [channelLogos, setChannelLogos] = useState({});
-  const [loadingLogos, setLoadingLogos] = useState(true);
 
   const url = COMMENT_API_URL + id + COMMENT_API_URL_EXT;
 
@@ -21,23 +24,30 @@ const Comments = memo(({ id, CommentCount }) => {
     try {
       const response = await fetch(url);
       const json = await response.json();
-      setCommentData(json?.items);
-      console.log(json?.items);
+      setCommentData(json?.items || []);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
   };
 
   const fetchChannelLogo = async (channelId) => {
-    if (channelLogos[channelId]) return;
+    if (channelLogoCache.has(channelId)) {
+      setChannelLogos((prevLogos) => ({
+        ...prevLogos,
+        [channelId]: channelLogoCache.get(channelId),
+      }));
+      return;
+    }
 
     try {
       const response = await fetch(
         `${CHANNEL_LOGO_URL}${channelId}${CHANNEL_LOGO_URL_EXT}`
       );
       const json = await response.json();
-      const logoUrl = json?.items[0]?.snippet?.thumbnails?.default?.url || "";
+      const logoUrl = json?.items?.[0]?.snippet?.thumbnails?.default?.url || "";
 
+      // Save to cache and state
+      channelLogoCache.set(channelId, logoUrl);
       setChannelLogos((prevLogos) => ({
         ...prevLogos,
         [channelId]: logoUrl,
@@ -48,87 +58,62 @@ const Comments = memo(({ id, CommentCount }) => {
   };
 
   useEffect(() => {
-    if (commentData.length > 0) {
-      setLoadingLogos(true);
-      commentData.forEach((comment) => {
-        const channelId =
-          comment?.snippet?.topLevelComment?.snippet?.authorChannelId?.value;
-        if (channelId) {
-          // fetchChannelLogo(channelId);
-        }
-      });
-    }
-  }, [commentData]);
-
-  useEffect(() => {
-    if (commentData.length > 0) {
-      const allLogosFetched = commentData.every((comment) => {
-        const channelId =
-          comment?.snippet?.topLevelComment?.snippet?.authorChannelId?.value;
-        return channelId && channelLogos[channelId];
-      });
-
-      if (allLogosFetched) {
-        setLoadingLogos(false);
-      }
-    }
-  }, [commentData, channelLogos]);
-
-  useEffect(() => {
     fetchComments();
   }, [id]);
 
   return (
     <div className="mt-4 w-[98vw] ps-2 lg:px-0 lg:w-auto">
-      <div className="flex py-2 ">
+      <div className="flex py-2">
         <h1 className="text-xl font-bold dark:text-[#f1f1f1]">
           {CommentCount} Comments
         </h1>
         <div className="ms-8 flex gap-2 cursor-pointer py-1 px-2 rounded-md hover:bg-[#9b9b9b] dark:hover:bg-transparent">
           <ShortLogo />
-          <span className="font-semibold text-nowrap text-lg dark:text-[#f1f1f1] ">
+          <span className="font-semibold text-nowrap text-lg dark:text-[#f1f1f1]">
             Sort by
           </span>
         </div>
       </div>
-      <div className="">
-        {commentData.length > 0 ? (
-          commentData.map((comment, index) => {
+      <div>
+        <Virtuoso
+          totalCount={commentData.length}
+          className="scrollbar-hidden min-h-[100vh] lg:min-h-[75vh]"
+          itemContent={(index) => {
+            const item = commentData[index];
             const channelId =
-              comment?.snippet?.topLevelComment?.snippet?.authorChannelId
-                ?.value;
+              item?.snippet?.topLevelComment?.snippet?.authorChannelId?.value;
             const textDisplay =
-              comment?.snippet?.topLevelComment?.snippet?.textDisplay;
+              item?.snippet?.topLevelComment?.snippet?.textDisplay;
             const likeCount =
-              comment?.snippet?.topLevelComment?.snippet?.likeCount;
+              item?.snippet?.topLevelComment?.snippet?.likeCount;
             const authorDisplayName =
-              comment?.snippet?.topLevelComment?.snippet?.authorDisplayName;
+              item?.snippet?.topLevelComment?.snippet?.authorDisplayName;
             const publishedAt =
-              comment?.snippet?.topLevelComment?.snippet?.publishedAt;
+              item?.snippet?.topLevelComment?.snippet?.publishedAt;
             const totalReplyCount =
-              comment?.snippet?.topLevelComment?.totalReplyCount;
-            fetchChannelLogo(channelId);
-            // Get the channel logo for the comment
+              item?.snippet?.topLevelComment?.totalReplyCount;
+
+            if (channelId && !channelLogos[channelId]) {
+              fetchChannelLogo(channelId);
+            }
+
             const logoUrl = channelId ? channelLogos[channelId] : "";
 
             return (
               <div key={index} className="flex gap-4">
                 <div className="min-w-10">
-                  {/* Display Channel Logo if available */}
-                  {loadingLogos ? (
+                  {!logoUrl ? (
                     <div className="w-10 h-10 rounded-full bg-gray-300" />
                   ) : (
-                    logoUrl && (
-                      <img
-                        className="w-10 h-10 rounded-full block object-cover"
-                        src={logoUrl}
-                        alt="Channel Logo"
-                      />
-                    )
+                    <img
+                      className="w-10 h-10 rounded-full block object-cover"
+                      src={logoUrl}
+                      alt="Channel Logo"
+                    />
                   )}
                 </div>
                 <div>
-                  <div className="flex flex-wrap lg:gap-2 align-middle ">
+                  <div className="flex flex-wrap lg:gap-2 align-middle">
                     <p className="font-semibold text-md mb-1 dark:text-[#f1f1f1]">
                       {authorDisplayName}
                     </p>
@@ -141,23 +126,22 @@ const Comments = memo(({ id, CommentCount }) => {
                   </p>
                   <div>
                     <div className="flex">
-                      <button className=" flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]">
+                      <button className="flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]">
                         <LikeLogo />
                       </button>
                       <span className="inline self-center text-sm dark:text-[#aaa]">
                         {likeCount}
                       </span>
-
                       <button
                         style={{ transform: "rotate(180deg)" }}
-                        className=" flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]"
+                        className="flex text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgba(255,255,255,0.2)]"
                       >
                         <LikeLogo />
                       </button>
                       <button className="px-3 py-2 flex ms-2 text-black rounded-full hover:bg-[#dbdbdb] dark:hover:bg-[rgb(255,255,255,0.2)]">
                         <span className="ms-1.5 text-sm font-medium dark:text-[#fff]">
                           {totalReplyCount
-                            ? { totalReplyCount } + "replies"
+                            ? `${totalReplyCount} replies`
                             : "Reply"}
                         </span>
                       </button>
@@ -171,10 +155,8 @@ const Comments = memo(({ id, CommentCount }) => {
                 </div>
               </div>
             );
-          })
-        ) : (
-          <p>No comments available</p>
-        )}
+          }}
+        />
       </div>
     </div>
   );

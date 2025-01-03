@@ -11,7 +11,7 @@ const VideoPlayer = () => {
     <div className="grid md:grid-flow-col md:grid-cols-3 gap-4 lg:px-4  max-w-full">
       {/* Video Player Section */}
       <div className="col-span-2 overflow-y-scroll scrollbar-hidden lg:max-h-[85vh]">
-        <Suspense fallback={<div>Loading WatchPage...</div>}>
+        <Suspense fallback={<div className="dark:text-[#aaa]">Loading WatchPage...</div>}>
           <WatchPage id={id} /> {/* Pass the id to trigger updates */}
         </Suspense>
       </div>

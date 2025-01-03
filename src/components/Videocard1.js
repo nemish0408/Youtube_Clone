@@ -1,32 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT } from "../utils/constants";
-import { Link } from "react-router-dom"; // Corrected to react-router-dom
+import { Link } from "react-router-dom";
 import { getTimeAgo } from "../utils/functions/getTimeAgo";
-import useFetch from "../utils/functions/fetchURL";
+
+// Cache for channel logos
+const channelLogoCache = new Map();
 
 const VideoCard1 = ({ info }) => {
   const { id, snippet } = info;
   const idext = id?.videoId || id?.playlistId || id?.channelId;
 
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
-  const {
-    data: json,
-    loading,
-    error,
-  } = useFetch(
-    snippet?.channelId
-      ? `${CHANNEL_LOGO_URL}${snippet.channelId}${CHANNEL_LOGO_URL_EXT}`
-      : null
-  );
 
   useEffect(() => {
-    if (json && json.items && json.items[0]) {
-      const logoUrl = json.items[0].snippet?.thumbnails?.default?.url || "";
-      setChannelLogoUrl(logoUrl);
-    }
-  }, [json]); // This runs when json changes
+    const fetchChannelLogo = async () => {
+      if (!snippet?.channelId) return;
 
-  if (!idext) return null; // Return null if no valid id is found
+      // Check cache first
+      if (channelLogoCache.has(snippet.channelId)) {
+        setChannelLogoUrl(channelLogoCache.get(snippet.channelId));
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${CHANNEL_LOGO_URL}${snippet.channelId}${CHANNEL_LOGO_URL_EXT}`
+        );
+        const json = await response.json();
+        const logoUrl = json?.items?.[0]?.snippet?.thumbnails?.default?.url || "";
+
+        // Save to cache and state
+        channelLogoCache.set(snippet.channelId, logoUrl);
+        setChannelLogoUrl(logoUrl);
+      } catch (error) {
+        console.error("Error fetching channel logo:", error);
+      }
+    };
+
+    fetchChannelLogo();
+  }, [snippet?.channelId]);
+
+  if (!idext) return null;
 
   return (
     <div>
@@ -43,24 +57,20 @@ const VideoCard1 = ({ info }) => {
         rel="noreferrer"
       >
         <div className="w-full lg:flex relative overflow-hidden">
-          <div className=" relative rounded-lg hover:rounded-none">
+          <div className="relative rounded-lg hover:rounded-none">
             <img
               alt="thumbnail"
               src={snippet.thumbnails.medium.url}
               className={
                 id?.channelId
-                  ? " object-fill mx-auto h-[175px] rounded-full"
-                  : "rounded-lg object-fill h-[175px] "
+                  ? "object-fill mx-auto h-[175px] rounded-full"
+                  : "rounded-lg object-fill h-[175px]"
               }
             />
           </div>
           <div className="px-4 py-2">
             <div className="flex items-top space-x-2">
-              {loading ? (
-                <div className="w-10 h-10 rounded-full bg-gray-200" />
-              ) : error ? (
-                <div className="w-10 h-10 rounded-full bg-gray-300" />
-              ) : channelLogoUrl ? (
+              {channelLogoUrl ? (
                 <Link to={`/channel/${id.channelId}`}>
                   <img
                     className="w-10 h-10 rounded-full"

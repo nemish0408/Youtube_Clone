@@ -32,8 +32,10 @@ const Head = () => {
   const [isCreate, setIsCreate] = useState(false);
   const [searchSugg, setSearchSugg] = useState([]);
   const [searchKey, setSearchKey] = useState("");
+  const [user, setUser] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const debounceTimer = useRef(null);
+  const userdata = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -105,10 +107,7 @@ const Head = () => {
     }
   };
   const handleClickOutside = (event) => {
-    if (
-      profileRef.current &&
-      !profileRef.current.contains(event.target)
-    ) {
+    if (profileRef.current && !profileRef.current.contains(event.target)) {
       setIsProfile(false);
     }
     if (
@@ -121,6 +120,7 @@ const Head = () => {
       setIsCreate(false);
     }
   };
+  // console.log(user?.name);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -135,13 +135,16 @@ const Head = () => {
       getVideos();
     }
   }, []);
+  useEffect(() => {
+    setUser(userdata);
+  }, []);
 
   useEffect(() => {
     if (selectedIndex >= 0 && selectedIndex < searchSugg.length) {
       setSearchKey(searchSugg[selectedIndex]);
     }
   }, [selectedIndex, searchSugg]);
-  
+
   useEffect(() => {
     if (location.pathname.startsWith("/search")) {
       const savedSearchKey = localStorage.getItem("searchKey");
@@ -154,7 +157,7 @@ const Head = () => {
       setSearchKey("");
     }
   }, [location.pathname]);
-  
+
   useEffect(() => {
     return () => {
       if (debounceTimer.current) {
@@ -162,16 +165,16 @@ const Head = () => {
       }
     };
   }, []);
-  
+
   return (
     <div className="sticky top-0 z-10 bg-white dark:bg-[#0f0f0f] shadow-md">
       <div className="flex flex-wrap justify-between items-center px-4 md:px-6 py-2 order-1">
         {/* Left Section */}
         <div className="flex items-center">
           <button onClick={() => dispatch(toggleMenu())} className="p-2">
-            {isMenuOpen?<Close/>:<HambergLogo/>}
+            {isMenuOpen ? <Close /> : <HambergLogo />}
           </button>
-          {console.log(localStorage.getItem("isMenuOpen"))}
+          {/* {console.log(localStorage.getItem("isMenuOpen"))} */}
           <Link to="/" className="ml-4 flex align-middle">
             <Youtubelogo />
           </Link>
@@ -239,7 +242,7 @@ const Head = () => {
               </span>
             </button>
             {isCreate && (
-              <div className=" shadow-lg rounded-lg absolute bg-white dark:bg-[#212121] lg:w-[12vw] w-[35vw]" >
+              <div className=" shadow-lg rounded-lg absolute bg-white dark:bg-[#212121] lg:w-[12vw] w-[35vw]">
                 <ul>
                   <Link
                     to="/"
@@ -276,7 +279,7 @@ const Head = () => {
             </button>
             {isNotification && (
               <div className="absolute bg-white dark:bg-[#0f0f0f] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen lg:min-w-[30vw] top-10">
-                <NotificationBox/>
+                <NotificationBox />
               </div>
             )}
           </div>
@@ -288,12 +291,12 @@ const Head = () => {
                 setIsNotification(false);
                 setIsCreate(false);
               }}
-            >
-              <ProfileLogo />
+            >{user?.picture?<img src={user?.picture} alt="img" className="rounded-full scale-150"/>:<ProfileLogo/>}
+              {/* <ProfileLogo /> */}
             </button>
             {isProfile && (
               <div className="absolute bg-white dark:bg-[#212121] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen min-w-[90vw] lg:min-w-[30vw] top-10">
-                <ProfileMenu />
+                <ProfileMenu user={user}/>
               </div>
             )}
           </div>

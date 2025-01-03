@@ -104,7 +104,7 @@ const ChannelPage = () => {
               videoDetails.map((item, index) => {
                 return (
                   <div className="shadow-md rounded-lg w-full" key={index}>
-                    <VideoCard info={item} />
+                    <VideoCard info={item} channelLogo={channelDetails?.snippet?.thumbnails?.medium?.url}/>
                   </div>
                 );
               })}

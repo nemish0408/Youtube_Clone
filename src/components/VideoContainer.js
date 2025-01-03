@@ -4,24 +4,52 @@ import VideoCard from "./VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import { setResults } from "../utils/searchResultSlice";
 import useFetch from "../utils/functions/fetchURL";
+import { VirtuosoGrid } from "react-virtuoso";
+
+const gridComponents = {
+  List: React.forwardRef(({ style, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      {...props}
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        // gap: "0.5rem", // Matches Tailwind's gap-5
+        // padding: "0.7 rem", // Matches Tailwind's p-5
+        ...style,
+      }}
+      className="justify-around"
+    >
+      {children}
+    </div>
+  )),
+  Item: ({ children, ...props }) => (
+    <div
+      {...props}
+      
+      className="w-full md:w-[32%] lg:w-[22%] shadow-md rounded-lg"
+    >
+      {children}
+    </div>
+  ),
+};
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [menu,setmenu] = useState('')
+  const [menu, setMenu] = useState(false);
   const dispatch = useDispatch();
-  const isMenu =useSelector((store) => store.app.isMenuOpen);
+  const isMenu = useSelector((store) => store.app.isMenuOpen);
   const { data: json } = useFetch(YOUTUBE_VIDEO_URL);
+
   const getVideos = () => {
-    setVideos(json?.items);
-    console.log(json);
-    
-    // await dispatch(setResults(json.items))
+    setVideos(json?.items || []);
   };
+
   useEffect(() => {
     const savedFiltered = JSON.parse(localStorage.getItem("Results") || "[]");
     setFiltered(savedFiltered);
-    if (json && json.items && json.items[0]) {
+    if (json && json.items) {
       getVideos();
     }
   }, [json]);
@@ -30,18 +58,22 @@ const VideoContainer = () => {
     if (videos.length > 0) {
       dispatch(setResults(videos));
     }
-  }, [videos]);
-useEffect(()=>{
-setmenu(isMenu)
-},[isMenu])
+  }, [videos, dispatch]);
+
+  useEffect(() => {
+    setMenu(isMenu);
+  }, [isMenu]);
+
   return (
-    <div className={menu?"grid md:grid-cols-3 grid-cols-1 gap-5 p-5":"grid md:grid-cols-4 grid-cols-1 gap-5 p-5"}>
+    <div className="mt-2">
       {filtered.length > 0 ? (
-        filtered.map((item, index) => (
-          <div className="shadow-md rounded-lg w-full" key={index}>
-            <VideoCard info={item} />
-          </div>
-        ))
+        <VirtuosoGrid
+          style={{ height: "78vh" }}
+          totalCount={filtered.length}
+          className="scrollbar-hidden"
+          components={gridComponents}
+          itemContent={(index) => <VideoCard info={filtered[index]} />}
+        />
       ) : (
         <div>No videos found.</div>
       )}

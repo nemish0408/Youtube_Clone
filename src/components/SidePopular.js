@@ -1,21 +1,25 @@
 import React, { lazy, memo } from "react";
 import ButtonList from "./ButtonList";
-const VertVideoCard = lazy(()=>import("./VertVideoCard"))
+import { Virtuoso } from "react-virtuoso";
+const VertVideoCard = lazy(() => import("./VertVideoCard"));
 const SidePopular = memo(() => {
   const info = JSON.parse(localStorage.getItem("Results") || "[]");
 
   return (
     <div className="lg:max-w-[38vw]">
-      <div className="">
+      <div className="mb-2">
         <ButtonList />
       </div>
-      {info.map((item, index) => {
-        return (
-          <div key={index} className="pe-2">
-            <VertVideoCard info={item} />
-          </div>
-        );
-      })}
+      <div className="lg:pe-2">
+        <Virtuoso
+          totalCount={info.length}
+          className="scrollbar-hidden min-h-[100vh] lg:min-h-[79vh]"
+          itemContent={(index) => {
+            const item = info[index];
+            return <VertVideoCard info={item} key={index} />;
+          }}
+        />
+      </div>
     </div>
   );
 });
