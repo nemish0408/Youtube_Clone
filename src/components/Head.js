@@ -35,7 +35,8 @@ const Head = () => {
   const [user, setUser] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const debounceTimer = useRef(null);
-  const userdata = JSON.parse(localStorage.getItem("user"));
+  const userdata = JSON.parse(localStorage.getItem("user"))||{};
+  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,9 +44,7 @@ const Head = () => {
   const profileRef = useRef(null);
   const notificationRef = useRef(null);
   const createRef = useRef(null);
-  const { data, loading, error } = useFetch(
-    searchKey ? `${SEARCH_API_URL}${searchKey}` : null
-  );
+  const { data } = useFetch(searchKey ? `${SEARCH_API_URL}${searchKey}` : null);
 
   const getVideos = async () => {
     if (data && Array.isArray(data) && data.length > 1) {
@@ -136,8 +135,17 @@ const Head = () => {
     }
   }, []);
   useEffect(() => {
-    setUser(userdata);
-  }, []);
+    try {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      setUser({});
+    }
+  }, [token]);
+  
 
   useEffect(() => {
     if (selectedIndex >= 0 && selectedIndex < searchSugg.length) {
@@ -291,12 +299,21 @@ const Head = () => {
                 setIsNotification(false);
                 setIsCreate(false);
               }}
-            >{user?.picture?<img src={user?.picture} alt="img" className="rounded-full scale-150"/>:<ProfileLogo/>}
+            >
+              {user ? (
+                <img
+                  src={user?.picture}
+                  alt="img"
+                  className="rounded-full scale-150"
+                />
+              ) : (
+                <ProfileLogo />
+              )}
               {/* <ProfileLogo /> */}
             </button>
             {isProfile && (
               <div className="absolute bg-white dark:bg-[#212121] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen min-w-[90vw] lg:min-w-[30vw] top-10">
-                <ProfileMenu user={user}/>
+                <ProfileMenu user={user} />
               </div>
             )}
           </div>

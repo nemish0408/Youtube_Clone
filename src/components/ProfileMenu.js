@@ -18,13 +18,17 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../utils/appSlice";
 
-const ProfileMenu = ({ user }) => {
+const ProfileMenu = ({ user:data }) => {
   const [isDark, setisDark] = useState("");
+  const [user, setUser] = useState({})
   const dark = useSelector((store) => store.app.isDark);
   const dispatch = useDispatch();
   useEffect(() => {
     setisDark(dark);
   });
+  useEffect(()=>{
+setUser(data)
+  },[data])
   return (
     <div>
       <div className="grid">
@@ -32,7 +36,11 @@ const ProfileMenu = ({ user }) => {
           <div className=" px-4 my-auto">
             {user?.picture ? (
               <div className="w-12 h-12 rounded-full">
-                <img src={user?.picture} className="w-full rounded-full" alt="profile" />
+                <img
+                  src={user?.picture}
+                  className="w-full rounded-full"
+                  alt="profile"
+                />
               </div>
             ) : (
               <div className="bg-gray-400 w-12 h-12 rounded-full"></div>
@@ -64,9 +72,16 @@ const ProfileMenu = ({ user }) => {
               </div>
               <KeyboardArrowRightIcon className="text-gray-700 dark:text-white" />
             </li>
-            <li className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]">
+            <li
+              onClick={() => {
+                localStorage.setItem("token", null);
+                localStorage.setItem("user", null);
+                
+              }}
+              className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]"
+            >
               <ExitToAppIcon className="text-gray-700 mr-3 dark:text-white" />{" "}
-              Sign Out
+              {user && "Sign Out"}
             </li>
             <hr className="my-1 border-gray-200" />
             <li className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]">
