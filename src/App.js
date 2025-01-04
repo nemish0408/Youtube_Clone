@@ -11,14 +11,22 @@ import LiveVideos from "./components/LiveVideos";
 import LikedVideos from "./components/LikedVideos";
 import WatchPage from "./components/WatchPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleOneTap from "./components/GoogleOneTap";
+import { useState } from "react";
 
 function App() {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   return (
     <div className="dark:bg-[#0f0f0f]">
       <GoogleOAuthProvider clientId="790030640984-t0lrcbl9nnbohd2no6dm1oi72cdob5p4.apps.googleusercontent.com">
         <BrowserRouter>
           <Head />
+          {!user&&<GoogleOneTap/>}
+
           <div className="grid grid-flow-col dark:bg-[#0f0f0f] w-[100vw] lg:w-[98vw] pt-[10px]">
             <div
               className={isMenuOpen ? "max-w-[15vw] max-h-[82vh]" : "hidden"}

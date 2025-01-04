@@ -300,11 +300,11 @@ const Head = () => {
                 setIsCreate(false);
               }}
             >
-              {user ? (
+              {user?.picture ? (
                 <img
                   src={user?.picture}
-                  alt="img"
-                  className="rounded-full scale-150"
+                  alt=""
+                  className="rounded-full scale-150 "
                 />
               ) : (
                 <ProfileLogo />

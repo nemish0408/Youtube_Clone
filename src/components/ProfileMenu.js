@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {Link } from 'react-router'
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -18,17 +19,17 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../utils/appSlice";
 
-const ProfileMenu = ({ user:data }) => {
+const ProfileMenu = ({ user: data }) => {
   const [isDark, setisDark] = useState("");
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState({});
   const dark = useSelector((store) => store.app.isDark);
   const dispatch = useDispatch();
   useEffect(() => {
     setisDark(dark);
-  });
-  useEffect(()=>{
-setUser(data)
-  },[data])
+  }, [dark]);
+  useEffect(() => {
+    setUser(data);
+  }, [data]);
   return (
     <div>
       <div className="grid">
@@ -72,17 +73,18 @@ setUser(data)
               </div>
               <KeyboardArrowRightIcon className="text-gray-700 dark:text-white" />
             </li>
-            <li
-              onClick={() => {
-                localStorage.setItem("token", null);
-                localStorage.setItem("user", null);
-                
-              }}
-              className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]"
-            >
-              <ExitToAppIcon className="text-gray-700 mr-3 dark:text-white" />{" "}
-              {user && "Sign Out"}
-            </li>
+            {user &&
+              <li
+                onClick={() => {
+                  localStorage.setItem("token", null);
+                  localStorage.setItem("user", null);
+                }}
+                className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]"
+              >
+                <ExitToAppIcon className="text-gray-700 mr-3 dark:text-white" />{" "}
+                Sign Out
+              </li>
+            }
             <hr className="my-1 border-gray-200" />
             <li className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]">
               <VideoLibraryIcon className="text-gray-700 mr-3 dark:text-white" />{" "}

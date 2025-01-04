@@ -3,8 +3,9 @@ import { YOUTUBE_VIDEO_URL } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import { setResults } from "../utils/searchResultSlice";
-import useFetch from "../utils/functions/fetchURL";
 import { VirtuosoGrid } from "react-virtuoso";
+import useFetch from "../utils/functions/fetchURL";
+import useLoadMoreVideos from "../utils/functions/loadingMore";
 
 const gridComponents = {
   List: React.forwardRef(({ style, children, ...props }, ref) => (
@@ -14,8 +15,6 @@ const gridComponents = {
       style={{
         display: "flex",
         flexWrap: "wrap",
-        // gap: "0.5rem", // Matches Tailwind's gap-5
-        // padding: "0.7 rem", // Matches Tailwind's p-5
         ...style,
       }}
       className="justify-around"
@@ -26,7 +25,6 @@ const gridComponents = {
   Item: ({ children, ...props }) => (
     <div
       {...props}
-      
       className="w-full md:w-[32%] lg:w-[22%] shadow-md rounded-lg"
     >
       {children}
@@ -37,22 +35,26 @@ const gridComponents = {
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [menu, setMenu] = useState(false);
+  const [nextPageToken, setNextPageToken] = useState("");
   const dispatch = useDispatch();
-  const isMenu = useSelector((store) => store.app.isMenuOpen);
-  const { data: json } = useFetch(YOUTUBE_VIDEO_URL);
 
-  const getVideos = () => {
-    setVideos(json?.items || []);
-  };
+  const { data: initialData, error: initialError } =
+    useFetch(YOUTUBE_VIDEO_URL);
 
   useEffect(() => {
-    const savedFiltered = JSON.parse(localStorage.getItem("Results") || "[]");
-    setFiltered(savedFiltered);
-    if (json && json.items) {
-      getVideos();
+    if (initialData) {
+      setVideos(initialData.items || []);
+      setNextPageToken(initialData.nextPageToken || "");
+      localStorage.setItem("Results", JSON.stringify(initialData.items || []));
     }
-  }, [json]);
+  }, [initialData]);
+
+  const {
+    data: moreData,
+    loading: isLoadingMore,
+    error: loadMoreError,
+    loadMore,
+  } = useLoadMoreVideos(YOUTUBE_VIDEO_URL, nextPageToken, setNextPageToken);
 
   useEffect(() => {
     if (videos.length > 0) {
@@ -61,8 +63,14 @@ const VideoContainer = () => {
   }, [videos, dispatch]);
 
   useEffect(() => {
-    setMenu(isMenu);
-  }, [isMenu]);
+    const savedFiltered = JSON.parse(localStorage.getItem("Results") || "[]");
+    setFiltered(savedFiltered);
+  }, [videos]);
+  useEffect(() => {
+    if (moreData && moreData.length > 0) {
+      setVideos((prevVideos) => [...prevVideos, ...moreData]);
+    }
+  }, [moreData]);
 
   return (
     <div className="mt-2">
@@ -73,9 +81,23 @@ const VideoContainer = () => {
           className="scrollbar-hidden"
           components={gridComponents}
           itemContent={(index) => <VideoCard info={filtered[index]} />}
+          endReached={loadMore}
         />
       ) : (
         <div>No videos found.</div>
+      )}
+      {isLoadingMore && (
+        <div className="text-center mt-4">Loading more videos...</div>
+      )}
+      {initialError && (
+        <div className="text-center text-red-500">
+          Error: {initialError.message}
+        </div>
+      )}
+      {loadMoreError && (
+        <div className="text-center text-red-500">
+          Error: {loadMoreError.message}
+        </div>
       )}
     </div>
   );
