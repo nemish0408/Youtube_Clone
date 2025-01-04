@@ -17,8 +17,10 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../utils/appSlice";
+import { useNavigate } from "react-router";
 
-const ProfileMenu = ({ user: data }) => {
+const ProfileMenu = ({ user: data, profile }) => {
+  const navigate = useNavigate();
   const [isDark, setisDark] = useState("");
   const [user, setUser] = useState({});
   const dark = useSelector((store) => store.app.isDark);
@@ -77,6 +79,8 @@ const ProfileMenu = ({ user: data }) => {
                 onClick={() => {
                   localStorage.setItem("token", null);
                   localStorage.setItem("user", null);
+                  navigate("/");
+                  profile(false)
                 }}
                 className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]"
               >

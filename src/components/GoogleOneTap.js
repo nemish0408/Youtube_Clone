@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router";
 
 const GoogleOneTap = () => {
+  const navigate = useNavigate()
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
@@ -17,7 +19,7 @@ const GoogleOneTap = () => {
       const decodedToken = jwtDecode(credentialResponse.credential);
       console.log("Decoded Token:", decodedToken);
 
-      alert(`Hello, ${decodedToken.name}! You are logged in.`);
+      navigate("/")
       localStorage.setItem("user", JSON.stringify(decodedToken));
       localStorage.setItem(
         "token",
@@ -34,7 +36,7 @@ const GoogleOneTap = () => {
     },
   });
 
-  console.log(user);
+  // console.log(user);
   useEffect(() => {
     if (!user) {
       console.log("Waiting for Google One Tap login...");

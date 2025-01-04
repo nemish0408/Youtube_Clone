@@ -313,7 +313,7 @@ const Head = () => {
             </button>
             {isProfile && (
               <div className="absolute bg-white dark:bg-[#212121] rounded-lg right-0 -translate-x-screen h-[70vh] lg:h-[90vh] shadow-md w-scereen min-w-[90vw] lg:min-w-[30vw] top-10">
-                <ProfileMenu user={user} />
+                <ProfileMenu user={user} profile={setIsProfile}/>
               </div>
             )}
           </div>
