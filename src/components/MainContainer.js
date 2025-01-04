@@ -1,10 +1,7 @@
-import { useState } from "react";
 import ButtonList from "./ButtonList";
 import VideoContainer from "./VideoContainer";
-import GoogleOneTap from "./GoogleOneTap";
 
 const MainContainer = () => {
-   
   return (
     <div className="overflow-y-scroll scrollbar-hidden max-h-[85vh] lg:pt-5">
       {/* Only show Google One Tap login if user is not already logged in */}

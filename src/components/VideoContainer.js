@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { YOUTUBE_VIDEO_URL } from "../utils/constants";
 import VideoCard from "./VideoCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setResults } from "../utils/searchResultSlice";
 import { VirtuosoGrid } from "react-virtuoso";
 import useFetch from "../utils/functions/fetchURL";

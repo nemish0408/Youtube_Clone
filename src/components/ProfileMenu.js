@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {Link } from 'react-router'
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -73,7 +72,7 @@ const ProfileMenu = ({ user: data }) => {
               </div>
               <KeyboardArrowRightIcon className="text-gray-700 dark:text-white" />
             </li>
-            {user &&
+            {user && (
               <li
                 onClick={() => {
                   localStorage.setItem("token", null);
@@ -84,7 +83,7 @@ const ProfileMenu = ({ user: data }) => {
                 <ExitToAppIcon className="text-gray-700 mr-3 dark:text-white" />{" "}
                 Sign Out
               </li>
-            }
+            )}
             <hr className="my-1 border-gray-200" />
             <li className="cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 dark:text-white dark:hover:bg-[rgba(255,255,255,0.1)]">
               <VideoLibraryIcon className="text-gray-700 mr-3 dark:text-white" />{" "}
