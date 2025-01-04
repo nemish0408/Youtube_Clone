@@ -16,7 +16,7 @@ import { useState } from "react";
 
 function App() {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-  const [user, setUser] = useState(() => {
+  const [user] = useState(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
