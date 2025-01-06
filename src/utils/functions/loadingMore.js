@@ -7,7 +7,7 @@ const useLoadMoreVideos = (baseURL, nextPageToken, setNextPageToken) => {
   const [error, setError] = useState(null);
 
   const loadMore = async () => {
-    console.log(nextPageToken);
+    // console.log(nextPageToken);
     
     if (!nextPageToken || loading) return;
 

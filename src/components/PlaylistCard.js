@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { PlaylistPlay } from "@mui/icons-material";
 
 const PlaylistCard = ({ info }) => {
+  const navigate = useNavigate();
   return (
     <div>
       <Link to={"/playlist/" + info?.id} rel="noreferrer">
@@ -24,7 +25,8 @@ const PlaylistCard = ({ info }) => {
                 className="w-full absolute top-0 border-t-[1px] dark:border-[#0f0f0f] rounded-lg "
               ></img>
               <p className="absolute text-[#f1f1f1] font-bold bg-[rgb(0,0,0,0.6)] text-xs px-0.5 -py-0.5 rounded-md right-[3%] bottom-[3%]">
-                <PlaylistPlay className="" />{info?.contentDetails?.itemCount} videos
+                <PlaylistPlay className="" />
+                {info?.contentDetails?.itemCount} videos
               </p>
               <div className="absolute rounded-lg flex justify-center bg-[rgb(0,0,0,0.6)] opacity-0 hover:opacity-100 top-0 w-full text-center h-full align-middle">
                 <p className="my-auto text-[#f1f1f1]">
@@ -41,7 +43,9 @@ const PlaylistCard = ({ info }) => {
                   {info?.snippet?.title}
                 </p>
                 <p className="font-semibold text-xs text-gray-500 hover:text-gray-800 dark:text-[#aaa] w-full line-clamp-2 dark:hover:text-[#f1f1f1]">
-                  <Link to={"/playlist/" + info?.id}>View full playlist</Link>
+                  <button onClick={() => navigate(`/playlist/${info?.id}`)}>
+                    View full playlist
+                  </button>
                 </p>
               </div>
             </div>

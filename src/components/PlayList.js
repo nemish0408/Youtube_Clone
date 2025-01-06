@@ -90,9 +90,9 @@ const PlayList = () => {
                 </div>
               </div>
               <ul className="space-y-4 bg-gray-100 dark:bg-[#0f0f0f] overflow-y-scroll hover:scrollbar-thin scrollbar-hidden scrollbar-thumb-rounded-full scrollbar-thumb-gray-700 scrollbar-track-gray-500 h-[50vh] dark:bg">
-                {videos.map((video) => (
+                {videos.map((video,index) => (
                   <li
-                    key={video.snippet.resourceId.videoId}
+                    key={index}
                     className={`flex items-center space-x-4 p-2 cursor-pointer rounded-md hover:bg-gray-200 dark:hover:bg-[rgb(255,255,255,0.2)] ${
                       selectedVideo?.snippet.resourceId.videoId ===
                       video.snippet.resourceId.videoId

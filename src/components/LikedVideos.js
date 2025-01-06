@@ -14,7 +14,7 @@ const LikedVideos = () => {
       Authorization: `Bearer ${accesstoken}`,
     },
   });
-  console.log(json);
+  // console.log(json);
 
   useEffect(() => {
     setmenu(isMenu);

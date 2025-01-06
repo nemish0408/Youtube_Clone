@@ -9,7 +9,7 @@ const LiveVideos = () => {
   const [menu, setmenu] = useState("");
   const isMenu = useSelector((store) => store.app.isMenuOpen);
   const { data: json } = useFetch(LIVE_VIDEO_URL);
-  console.log(json);
+  // console.log(json);
   
   useEffect(() => {
     setmenu(isMenu);

@@ -9,7 +9,7 @@ import { Virtuoso } from "react-virtuoso";
 const SearchVideoCard = () => {
   const [filtered, setFiltered] = useState([]);
   const keyw = useParams();
-  console.log(keyw.id);
+  // console.log(keyw.id);
 
   const dispatch = useDispatch();
   // const location = useLocation();

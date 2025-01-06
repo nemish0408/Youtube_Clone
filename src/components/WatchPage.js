@@ -17,7 +17,7 @@ const VideoDescription = lazy(() => import("./VideoDescription"));
 
 const watchPage = memo(({id}) => {
     // const { id } = useParams();
-    console.log(id);
+    // console.log(id);
     
     const [commentCount, setCommentCount] = useState("");
     const [subscriberCount, setSubscriberCount] = useState("");

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CHANNEL_LOGO_URL, CHANNEL_LOGO_URL_EXT } from "../utils/constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getTimeAgo } from "../utils/functions/getTimeAgo";
 
 // Cache for channel logos
@@ -11,6 +11,7 @@ const VideoCard1 = ({ info }) => {
   const idext = id?.videoId || id?.playlistId || id?.channelId;
 
   const [channelLogoUrl, setChannelLogoUrl] = useState("");
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchChannelLogo = async () => {
@@ -71,13 +72,13 @@ const VideoCard1 = ({ info }) => {
           <div className="px-4 py-2">
             <div className="flex items-top space-x-2">
               {channelLogoUrl ? (
-                <Link to={`/channel/${id.channelId}`}>
+                <button onClick={()=>navigate(`/channel/${id.channelId}`)}>
                   <img
                     className="w-10 h-10 rounded-full"
                     src={channelLogoUrl}
                     alt="Channel Logo"
                   />
-                </Link>
+                </button>
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gray-300" />
               )}

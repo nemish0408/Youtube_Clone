@@ -13,11 +13,11 @@ const GoogleOneTap = () => {
   // Conditionally invoke useGoogleOneTapLogin only if user is not logged in
   const googleOneTapLogin = useGoogleOneTapLogin({
     onSuccess: (credentialResponse) => {
-      console.log("Google One Tap login success:", credentialResponse);
+      // console.log("Google One Tap login success:", credentialResponse);
 
       // Decode the JWT to extract user information
       const decodedToken = jwtDecode(credentialResponse.credential);
-      console.log("Decoded Token:", decodedToken);
+      // console.log("Decoded Token:", decodedToken);
 
       navigate("/")
       localStorage.setItem("user", JSON.stringify(decodedToken));
@@ -35,13 +35,6 @@ const GoogleOneTap = () => {
         "790030640984-t0lrcbl9nnbohd2no6dm1oi72cdob5p4.apps.googleusercontent.com",
     },
   });
-
-  // console.log(user);
-  useEffect(() => {
-    if (!user) {
-      console.log("Waiting for Google One Tap login...");
-    }
-  }, [user]);
 
   return googleOneTapLogin
 };
