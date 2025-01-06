@@ -43,7 +43,7 @@ const GoogleOneTap = () => {
     }
   }, [user]);
 
-  return GoogleOneTap
+  return googleOneTapLogin
 };
 
 export default GoogleOneTap;
